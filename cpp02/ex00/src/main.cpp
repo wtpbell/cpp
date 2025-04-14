@@ -5,29 +5,21 @@
 /*                                                     +:+                    */
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2025/04/09 21:35:34 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/09 21:48:30 by bewong        ########   odam.nl         */
+/*   Created: 2025/04/14 11:37:31 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/14 11:37:32 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "transformFile.hpp"
+#include "Fixed.hpp"
 
-int	main(int argc, char **argv)
+int main( void ) 
 {
-	if (argc != 4)
-	{
-		std::cerr << RED << "ex04: Wrong number of arguments." << std::endl
-		<< "Usage: " << argv[0] << " <filename> <string to replace> <replacement>"
-		<< RESET << std::endl;
-		return (FAILURE);
-	}
-	TransformFile file(argv[1], argv[2], argv[3]);
-	
-	if (file.init() != SUCCESS)
-		return (FAILURE);
-	if (file.read() != SUCCESS)
-		return (FAILURE);
-	if (file.write() != SUCCESS)
-		return (FAILURE);
-	return (SUCCESS);
+    Fixed a;
+    Fixed b( a );
+    Fixed c;
+    c = b;
+    std::cout << a.getRawBits() << std::endl;
+    std::cout << b.getRawBits() << std::endl;
+    std::cout << c.getRawBits() << std::endl;
+    return (0);
 }

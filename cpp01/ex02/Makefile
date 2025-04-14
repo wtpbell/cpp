@@ -8,20 +8,16 @@ RED =			\033[0;91m
 CYAN =			\033[0;96m
 MAGENTA =		\033[0;95m
 
-# Standard
 NAME				= ex02
 
-# Directories
 INC					= -I include/
 OBJS_DIR 			= ./objs
 SRCS_DIR 			= ./src
 
-# Compiler and Flags
-CC					= c++
+CPP					= c++
 CFLAGS				= -Wextra -Wall -Werror -std=c++11 $(INC)
 RM					= rm -f
 
-# Source Files
 SRC					= main.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
@@ -34,16 +30,15 @@ all: 				$(OBJS_DIR) $(NAME)
 
 $(NAME): 			$(OBJS)
 					@echo "$(CYAN) ◎ Linking → $(MAGENTA)$@$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) $(OBJS) -o $(NAME)
+					@$(CPP) $(CFLAGS) $(INC) $(OBJS) -o $(NAME)
 					@echo "$(GREEN) ◎ Executable $(NAME) created successfully! ✓$(DEF_COLOR)"
 
 $(OBJS_DIR):
 					@mkdir -p $(OBJS_DIR)
 
-# Compile object files from source files
 $(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.cpp
 					@echo "$(YELLOW) ◎ Compiling → $(MAGENTA)$<$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+					@$(CPP) $(CFLAGS) $(INC) -c $< -o $@
 					@echo "$(GREEN) ◎ Object file $(notdir $@) created successfully! ✓$(DEF_COLOR)"
 
 clean:

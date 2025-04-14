@@ -7,6 +7,7 @@ YELLOW =		\033[0;93m
 RED =			\033[0;91m
 CYAN =			\033[0;96m
 MAGENTA =		\033[0;95m
+RESET =			\033[0m
 
 NAME				= ex01
 
@@ -14,11 +15,11 @@ INC					= -I include/
 OBJS_DIR 			= ./objs
 SRCS_DIR 			= ./src
 
-CC					= c++
-CFLAGS				= -Wextra -Wall -Werror -std=c++11 $(INC)
+CPP					= c++
+CFLAGS				= -Wextra -Wall -Werror -std=c++17 $(INC)
 RM					= rm -f
 
-SRC					= Zombie.cpp zombieHorde.cpp main.cpp
+SRC					= main.cpp Fixed.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 
@@ -30,7 +31,7 @@ all: 				$(OBJS_DIR) $(NAME)
 
 $(NAME): 			$(OBJS)
 					@echo "$(CYAN) ◎ Linking → $(MAGENTA)$@$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) $(OBJS) -o $(NAME)
+					@$(CPP) $(CFLAGS) $(INC) $(OBJS) -o $(NAME)
 					@echo "$(GREEN) ◎ Executable $(NAME) created successfully! ✓$(DEF_COLOR)"
 
 $(OBJS_DIR):
@@ -38,7 +39,7 @@ $(OBJS_DIR):
 
 $(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.cpp
 					@echo "$(YELLOW) ◎ Compiling → $(MAGENTA)$<$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+					@$(CPP) $(CFLAGS) $(INC) -c $< -o $@
 					@echo "$(GREEN) ◎ Object file $(notdir $@) created successfully! ✓$(DEF_COLOR)"
 
 clean:

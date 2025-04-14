@@ -8,52 +8,59 @@ RED =			\033[0;91m
 CYAN =			\033[0;96m
 MAGENTA =		\033[0;95m
 
-# Standard
 NAME				= ex04
 
-# Directories
 INC					= -I include/
 OBJS_DIR 			= ./objs
 SRCS_DIR 			= ./src
 
-# Compiler and Flags
-CC					= c++
-CFLAGS				= -Wextra -Wall -Werror -std=c++11 $(INC)
+CPP					= c++
+CFLAGS				= -Wextra -Wall -Werror -std=c++17 $(INC)
 RM					= rm -f
 
-# Source Files
-SRC					= main.cpp transformFile.cpp
-SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
-OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
+MAIN_SRC			= main.cpp transformFile.cpp
+TEST_SRC			= test.cpp transformFile.cpp
+
+MAIN_SRCS			= $(addprefix $(SRCS_DIR)/, $(MAIN_SRC))
+TEST_SRCS			= $(addprefix $(SRCS_DIR)/, $(TEST_SRC))
+
+MAIN_OBJS			= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(MAIN_SRCS))
+TEST_OBJS			= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(TEST_SRCS))
+
 
 start:
 					@echo "$(BLUE) ◎ Starting build process...$(DEF_COLOR)"
 					@make all
 
-all: 				$(OBJS_DIR) $(NAME)
+all: 				$(OBJS_DIR) $(NAME) test
 
-$(NAME): 			$(OBJS)
+$(NAME): 			$(MAIN_OBJS)
 					@echo "$(CYAN) ◎ Linking → $(MAGENTA)$@$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) $(OBJS) -o $(NAME)
+					@$(CPP) $(CFLAGS) $(MAIN_OBJS) -o $(NAME)
 					@echo "$(GREEN) ◎ Executable $(NAME) created successfully! ✓$(DEF_COLOR)"
+
+test: $(TEST_OBJS)
+					@$(CPP) $(CFLAGS) $(TEST_OBJS) -o test
+					@echo "$(GREEN) ◎ Executable test created successfully! ✓$(DEF_COLOR)"
 
 $(OBJS_DIR):
 					@mkdir -p $(OBJS_DIR)
 
-# Compile object files from source files
 $(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.cpp
 					@echo "$(YELLOW) ◎ Compiling → $(MAGENTA)$<$(DEF_COLOR)"
-					@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+					@$(CPP) $(CFLAGS) $(INC) -c $< -o $@
 					@echo "$(GREEN) ◎ Object file $(notdir $@) created successfully! ✓$(DEF_COLOR)"
 
 clean:
 					@echo "$(RED) ◎ Cleaning object files and directories...$(DEF_COLOR)"
-					@$(RM) -r $(OBJS) $(OBJS_DIR)
+					@$(RM) -rf $(OBJS_DIR)
+					@$(RM) -f test
 					@echo "$(GREEN) ◎ Cleaned successfully! ✓$(DEF_COLOR)"
 
 fclean: 			clean
 					@echo "$(RED) ◎ Removing executable $(NAME)...$(DEF_COLOR)"
 					@$(RM) $(NAME)
+					@$(RM) test
 					@echo "$(GREEN) ◎ Full cleanup completed! ✓$(DEF_COLOR)"
 
 re: 				fclean all
