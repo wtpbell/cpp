@@ -9,7 +9,7 @@ CYAN =			\033[0;96m
 MAGENTA =		\033[0;95m
 RESET =			\033[0m
 
-NAME				= ex02
+NAME				= ex03
 
 INC					= -I include/
 OBJS_DIR 			= ./objs
@@ -19,7 +19,7 @@ CPP					= c++
 CFLAGS				= -Wextra -Wall -Werror -std=c++17 $(INC)
 RM					= rm -f
 
-SRC					= main.cpp Fixed.cpp 
+SRC					= main.cpp Fixed.cpp Point.cpp bsp.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 
