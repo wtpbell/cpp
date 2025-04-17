@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   Point.cpp                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bewong <bewong@student.codam.nl>             +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/04/16 09:31:11 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/16 09:31:12 by bewong        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   Point.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/16 09:31:11 by bewong            #+#    #+#             */
+/*   Updated: 2025/04/17 10:42:08 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ Point::~Point()
 
 }
 
-Point&	Point::operator=(const Point& rhs)
+Point&	Point::operator=(Point& rhs)
 {
 	return (rhs);
 }
