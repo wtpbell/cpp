@@ -12,7 +12,7 @@
 
 #include "ClapTrap.hpp"
 
-ClapTrap::ClapTrap(): name("default"), _hp(10), _ep(10), _ad(0)
+ClapTrap::ClapTrap(void): name("default"), _hp(10), _ep(10), _ad(0)
 {
 	std::cout << BOLD << "ClapTrap: default constructor called" << RESET << std::endl;
 }

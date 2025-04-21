@@ -6,52 +6,54 @@
 /*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 18:00:31 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/21 14:54:42 by bewong           ###   ########.fr       */
+/*   Updated: 2025/04/21 14:52:18 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ClapTrap.hpp"
+#include "ScavTrap.hpp"
+#include "FragTrap.hpp"
 
 int	main(void)
 {
-	std::cout << GREEN << "\n=== Creating Default ClapTrap ===\n" << RESET;
+	std::cout << GREEN << "\n=== Creating Default ClapTrap, ScavTrap, FragTrap ===\n" << RESET;
 	std::cout << "a: ";
 	ClapTrap a;
-	a.attack("Nobody");
-	a.takeDamage(5);
-	a.beRepaired(3);
-	std::cout << "\n";
-
-	std::cout << GREEN << "\n=== Creating Named ClapTrap ===\n" << RESET;
 	std::cout << "b: ";
-	ClapTrap b("Idiot");
-	b.attack("Dumbass");
-	b.takeDamage(10);
-	b.beRepaired(5);
-	std::cout << "\n";
-
-	std::cout << GREEN << "\n=== Copy Constructor & Assignment ===\n" << RESET;
+	ScavTrap b("Baka");
 	std::cout << "c: ";
-	ClapTrap c(b);
-	c.attack("Fragtrap");
-	std::cout << "d: ";
-	ClapTrap d("Dumbass");
-	d = c;
-	d.attack("Idiot");
+	FragTrap c("Fragtrap");
+	a.attack("Nobody");
+	b.attack("Nobody");
+	c.attack("Nobody");
 	std::cout << "\n";
 
-	std::cout << GREEN << "\n=== Attack Until Energy Runs Out ===\n" << RESET;
-	for (int i = 0; i < 12; ++i) {
-		std::cout << "[" << i+1 << "] ";
-		a.attack("Target");
+	std::cout << GREEN << "\n=== Creating Named and Copy FragTrap ===\n" << RESET;
+	std::cout << "d: ";
+	FragTrap d(c);
+	std::cout << "e: ";
+	FragTrap e("Copycat");
+	d.attack("Someone");
+	e = d;
+	e.attack("Another");
+	std::cout << "\n";
+
+	std::cout << GREEN << "\n=== Attack Until Energy Runs Out (FragTrap) ===\n" << RESET;
+	for (int n = 0; n < 105; ++n) {
+		std::cout << "[" << n+1 << "] ";
+		c.attack("Target");
 	}
 	std::cout << "\n";
 
 	std::cout << GREEN << "\n=== Overkill and Repair Edge Cases ===\n" << RESET;
-	ClapTrap e("Fragtrap");
-	e.takeDamage(1000);
-	e.attack("Nobody");
-	e.beRepaired(10);
+	d.takeDamage(1000);
+	d.attack("Nobody");
+	d.beRepaired(10);
+	std::cout << "\n";
+
+	std::cout << GREEN << "\n=== guardGate() and highFivesGuys() Test ===\n" << RESET;
+	b.guardGate();
+	c.highFivesGuys();
+	d.highFivesGuys();
 	std::cout << "\n";
 
 	std::cout << GREEN << "\n=== End of Main ===\n" << RESET;

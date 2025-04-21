@@ -41,7 +41,7 @@ ClapTrap& ClapTrap::operator=(const ClapTrap& rhs)
 	return (*this);
 }
 
-ClapTrap::~ClapTrap(void)
+ClapTrap::~ClapTrap()
 {
 	std::cout << BOLD << "ClapTrap: destructor " << this->name << " called" << RESET << std::endl;
 }

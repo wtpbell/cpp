@@ -15,40 +15,44 @@
 
 int	main(void)
 {
+	std::cout << GREEN << "\n=== Creating Default ClapTrap and ScavTrap ===\n" << RESET;
+	std::cout << "a: ";
 	ClapTrap a;
-	ClapTrap b("Idiot");
-	ClapTrap c(b);
-	ClapTrap d("Dumbass");
-	ClapTrap e("Fragtrap");
-	ScavTrap g("Baka");
-	ScavTrap h(g);
+	std::cout << "b: ";
+	ScavTrap b("Baka");
+	a.attack("Nobody");
+	b.attack("Nobody");
+	std::cout << "\n";
 
-	a.attack("Idiot");
-	b.attack("Dumbass");
-	c.attack("Fragtrap");
-	d.attack("Idiot");
-	e.attack("Dumbass");
-	g.attack("Random enemy");
-	h.attack("Random enemy");
+	std::cout << GREEN << "\n=== Creating Named and Copy ScavTrap ===\n" << RESET;
+	std::cout << "c: ";
+	ScavTrap c(b);
+	std::cout << "d: ";
+	ScavTrap d("Copycat");
+	c.attack("Someone");
+	d = c;
+	d.attack("Another");
+	std::cout << "\n";
 
-	a.takeDamage(13);
-	b.takeDamage(10);
+	std::cout << GREEN << "\n=== Attack Until Energy Runs Out (ScavTrap) ===\n" << RESET;
+	for (int i = 0; i < 55; ++i) {
+		std::cout << "[" << i+1 << "] ";
+		b.attack("Target");
+	}
+	std::cout << "\n";
+
+	std::cout << GREEN << "\n=== Overkill and Repair Edge Cases ===\n" << RESET;
 	c.takeDamage(1000);
-	d.takeDamage(4);
-	e.takeDamage(0);
-	a.takeDamage(13);
-	g.takeDamage(2);
-	h.takeDamage(13);
-	
+	c.attack("Nobody");
+	c.beRepaired(10);
+	std::cout << "\n";
 
-	a.beRepaired(2);
-	b.beRepaired(9);
-	c.beRepaired(2);
-	d.beRepaired(14);
-	e.beRepaired(2);
-	g.beRepaired(0);
-	h.beRepaired(3);
+	std::cout << GREEN << "\n=== guardGate() Test ===\n" << RESET;
+	b.guardGate();
+	c.guardGate();
+	std::cout << "\n";
 
-	g.guardGate();
-	h.guardGate();
+	std::cout << GREEN << "\n=== End of Main ===\n" << RESET;
+	return 0;
 }
+

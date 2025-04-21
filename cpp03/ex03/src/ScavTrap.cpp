@@ -14,7 +14,7 @@
 
 ScavTrap::ScavTrap(): ClapTrap()
 {
-	std::cout << "ScavTrap: default constructor called" << std::endl;
+	std::cout << BOLD << "ScavTrap: default constructor called" << RESET << std::endl;
 	this->_hp = 100;
 	this->_ep = 50;
 	this->_ad = 20;
@@ -47,7 +47,7 @@ ScavTrap& ScavTrap::operator=(const ScavTrap& rhs)
 	return (*this);
 }
 
-ScavTrap::~ScavTrap(void)
+ScavTrap::~ScavTrap()
 {
 	std::cout << BOLD << "ScavTrap: destructor " << this->name << " called" << RESET << std::endl;
 }
@@ -68,5 +68,5 @@ void	ScavTrap::guardGate(void)
 	if (this->_hp <= 0)
 		std::cout << RED << "ScavTrap: " << this->name << " has no hit points left to guard!" << RESET << std::endl;
 	else
-		std::cout << BOLD << "ScavTrap: " << this->name << " is now in Gate keeper mode." << RESET << std::endl;
+	std::cout << BOLD << "ScavTrap: " << this->name << " is now in Gate keeper mode." << RESET << std::endl;
 }
