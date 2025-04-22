@@ -26,6 +26,13 @@
 #include <string>
 #include <iostream>
 
+
+/*
+	abstract class:
+	- no more generic class
+	- enfore interface, force all derived classes to implement their own version
+	- abstract class isnt an object to use directly (cant be instantiated)
+*/
 class Animal
 {
 	protected:
@@ -37,7 +44,7 @@ class Animal
 				Animal& operator=(const Animal& rhs);
 				virtual ~Animal();
 
-				virtual void	makeSound(void) const;
+				virtual void	makeSound(void) const = 0;
 				std::string 	getType(void) const;
 };
 

@@ -45,3 +45,9 @@ std::string	WrongAnimal::getType(void) const
 {
 	return (this->type);
 }
+
+std::ostream& operator<<(std::ostream& os, const WrongAnimal& animal)
+{
+	os << BOLD << "(type: " << animal.getType() << ")";
+	return (os);
+}

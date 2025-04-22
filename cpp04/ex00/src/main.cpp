@@ -24,23 +24,23 @@ int main()
 	const WrongCat* wrong_kitty = new WrongCat();
 
 	std::cout << CYAN << "\n=== Animal types and sounds ===\n" << RESET;
-	std::cout << BOLD << "unknown: (type: " << unknown->getType() << ")" << RESET << std::endl;
+	std::cout << BOLD << "unknown: " << *unknown << RESET << std::endl;
 	unknown->makeSound();
 	std::cout << std::endl;
 
-	std::cout << BOLD << "doggy: (type: " << doggy->getType() << ")" << RESET << std::endl;
+	std::cout << BOLD << "doggy: " << *doggy << RESET << std::endl;
 	doggy->makeSound();
 	std::cout << std::endl;
 
-	std::cout << BOLD << "kitty: (type: " << kitty->getType() << ")" << RESET << std::endl;
+	std::cout << BOLD << "kitty: " << *kitty << RESET << std::endl;
 	kitty->makeSound();
 	std::cout << std::endl;
 
-	std::cout << BOLD << "wrong_animal: (type: " << wrong_animal->getType() << ")" << RESET << std::endl;
+	std::cout << BOLD << "wrong_animal: " << *wrong_animal << RESET << std::endl;
 	wrong_animal->makeSound();
 	std::cout << std::endl;
 
-	std::cout << BOLD << "wrong_kitty: (type: " << wrong_kitty->getType() << ")" << RESET << std::endl;
+	std::cout << BOLD << "wrong_kitty: " << *wrong_kitty << RESET << std::endl;
 	wrong_kitty->makeSound();
 	std::cout << std::endl;
 

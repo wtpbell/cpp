@@ -41,4 +41,6 @@ class WrongAnimal
 		std::string	getType(void) const;
 };
 
+std::ostream& operator<<(std::ostream& os, const WrongAnimal& animal);
+
 #endif

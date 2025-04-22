@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WrongCat.hpp                                       :+:      :+:    :+:   */
+/*   IMaterialSource.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 15:54:35 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/21 15:54:35 by bewong           ###   ########.fr       */
+/*   Created: 2025/04/22 14:28:51 by bewong            #+#    #+#             */
+/*   Updated: 2025/04/22 14:28:51 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WRONGCAT_HPP
-# define WRONGCAT_HPP
+#ifndef IMATERIASOURCE_HPP
+# define IMATERIASOURCE_HPP
 
-#include "WrongAnimal.hpp"
+#include "AMateria.hpp"
+#include <iostream>
+#include <string>
 
-class WrongCat : public WrongAnimal
+class IMateriaSource
 {
 	public:
-			WrongCat();
-			WrongCat(const WrongCat &src);
-			WrongCat &operator=(const WrongCat &rhs);
-			~WrongCat();
-
-			void	makeSound(void) const;
+			virtual ~IMateriaSource() {}
+			virtual void learnMateria(AMateria*) = 0;
+			virtual AMateria* createMateria(std::string const & type) = 0;
 };
 
 #endif

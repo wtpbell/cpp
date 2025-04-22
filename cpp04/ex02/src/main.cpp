@@ -17,22 +17,22 @@
 int main()
 {
 	std::cout << CYAN << "\n=== Animal Initialization ===\n" << RESET;
-	const Animal* unknown = new Animal();
+	// const Animal* unknown = new Animal();
 	const Animal* doggy = new Dog();
 	const Animal* kitty = new Cat();
 	const WrongAnimal* wrong_animal = new WrongAnimal();
 	const WrongCat* wrong_kitty = new WrongCat();
 
 	std::cout << CYAN << "\n=== Animal types and sounds ===\n" << RESET;
-	std::cout << BOLD << "unknown: " << *unknown << RESET << std::endl;
-	unknown->makeSound();
-	std::cout << std::endl;
+	// std::cout << BOLD << "unknown: (type: " << unknown->getType() << ")" << RESET << std::endl;
+	// unknown->makeSound();
+	// std::cout << std::endl;
 
 	std::cout << BOLD << "doggy: " << *doggy << RESET << std::endl;
 	doggy->makeSound();
 	std::cout << std::endl;
 
-	std::cout << BOLD << "kitty: " << *kitty<< RESET << std::endl;
+	std::cout << BOLD << "kitty: " << *kitty << RESET << std::endl;
 	kitty->makeSound();
 	std::cout << std::endl;
 
@@ -45,7 +45,7 @@ int main()
 	std::cout << std::endl;
 	
 	std::cout << CYAN << "\n=== END ===\n" << RESET;
-	delete unknown;
+	// delete unknown;
 	delete doggy;
 	delete kitty;
 	delete wrong_animal;
@@ -76,7 +76,7 @@ int main()
 
 	std::cout << CYAN << "\n===Dog brain initialization ===\n" << RESET;
 	Dog* snoppy = new Dog();
-	std::cout << BOLD << "snoppy: " << *snopp << RESET << std::endl;
+	std::cout << BOLD << "snoppy: " << *snoppy << RESET << std::endl;
 	snoppy->makeSound();
 	snoppy->setIdea(1, "Where is the ball?");
 	snoppy->setIdea(02, "I know you are hiding it.");
