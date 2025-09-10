@@ -16,10 +16,11 @@
 #include <iostream>
 #include <type_traits>
 
+//function overload, same function name but different parameters
 // template <typename T, typename F>
 // void iter(T *array, size_t len, F func)
 // {
-// 	if (!array || !func)
+// 	if (!array)
 // 		return ;
 // 	for (size_t i = 0; i < len; i++)
 // 		func(array[i]);
@@ -27,16 +28,17 @@
 // template <typename T, typename F>
 // void iter(const T *array, size_t len, F func)
 // {
-// 	if (!array || !func)
+// 	if (!array)
 // 		return ;
 // 	for (size_t i = 0; i < len; i++)
 // 		func(array[i]);
 // } 
 
+// constexpr a value or function can be evaluated at compile time, the unused branch is dicarded during comp
 template <typename T, typename F>
 void	iter(T *array, size_t len, F func)
 {
-	if (!array || !func)
+	if (!array)
 		return ;
 	for (size_t i = 0; i < len; i++)
 	{
