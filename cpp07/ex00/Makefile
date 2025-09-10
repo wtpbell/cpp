@@ -42,7 +42,8 @@ $(OBJS_DIR):
 
 $(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.cpp
 					@echo "$(YELLOW) ◎ Compiling → $(MAGENTA)$<$(DEF_COLOR)"
-					@$(CPP) $(CPPFLAGS) $(INC) -c $< -o $@
+					@mkdir -p $(@D)
+					@$(CPP) $(CPPFLAGS) $(DFLAGS) -c $< -o $@
 					@echo "$(GREEN) ◎ Object file $(notdir $@) created successfully! ✓$(DEF_COLOR)"
 
 -include $(DEPS)

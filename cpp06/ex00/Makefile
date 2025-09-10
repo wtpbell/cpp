@@ -10,18 +10,18 @@ MAGENTA =		\033[0;95m
 RESET =			\033[0m
 
 
-NAME				= iter
+NAME				= scalarConverter
 
 INC					= -I include/
 OBJS_DIR			= ./objs
 SRCS_DIR			= ./src
 
-CPP					= c++ -std=c++20
-CPPFLAGS			= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
+CPP					= c++
+CPPFLAGS				= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
 RM					= rm -f
 DFLAGS				= -MMD -MP
 
-SRC					= main.cpp 
+SRC					= main.cpp ScalarConverter.cpp identifyType.cpp converter.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)

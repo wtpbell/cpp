@@ -16,18 +16,34 @@
 #include <iostream>
 #include <type_traits>
 
+// template <typename T, typename F>
+// void iter(T *array, size_t len, F func)
+// {
+// 	if (!array || !func)
+// 		return ;
+// 	for (size_t i = 0; i < len; i++)
+// 		func(array[i]);
+// } 
+// template <typename T, typename F>
+// void iter(const T *array, size_t len, F func)
+// {
+// 	if (!array || !func)
+// 		return ;
+// 	for (size_t i = 0; i < len; i++)
+// 		func(array[i]);
+// } 
+
 template <typename T, typename F>
-void iter(T *array, size_t len, F func)
+void	iter(T *array, size_t len, F func)
 {
-	static_assert(std::is_pointer<T>::value, "Type T must be a pointer for iter");
+	if (!array || !func)
+		return ;
 	for (size_t i = 0; i < len; i++)
-		func(array[i]);
-} 
-template <typename T, typename F>
-void iter(const T *array, size_t len, F func)
-{
-	static_assert(std::is_pointer<T>::value, "Type T must be a pointer for iter");
-	for (size_t i = 0; i < len; i++)
-		func(array[i]);
-} 
+	{
+		if constexpr (std::is_const_v<std::remove_pointer_t<T>>)
+			func(array[i]);
+		else
+			func(array[i]);
+	}
+}
 #endif

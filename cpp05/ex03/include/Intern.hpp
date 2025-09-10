@@ -24,8 +24,6 @@ class	Intern
 			Intern() = default;
 			Intern(const Intern&) = default;
 			Intern& operator=(const Intern&) = default;
-			Intern(Intern&&) = default;
-			Intern& operator=(Intern&&) = default;
 			~Intern() = default;
 
 			[[nodiscard]] AForm*	makeForm(const std::string& name, const std::string& target);

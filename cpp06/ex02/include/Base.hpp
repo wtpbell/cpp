@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:04:47 by bewong            #+#    #+#             */
-/*   Updated: 2025/09/09 13:28:10 by bewong           ###   ########.fr       */
+/*   Updated: 2025/09/09 19:18:40 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 class Base
 {
-public:
-	virtual ~Base() = default;
+	public:
+		virtual ~Base() = default;
 
-private:
+	private:
 };
 
 #endif

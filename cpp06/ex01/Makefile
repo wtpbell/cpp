@@ -10,21 +10,22 @@ MAGENTA =		\033[0;95m
 RESET =			\033[0m
 
 
-NAME				= iter
+NAME				= serializer
 
 INC					= -I include/
 OBJS_DIR			= ./objs
 SRCS_DIR			= ./src
 
-CPP					= c++ -std=c++20
-CPPFLAGS			= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
+CPP					= c++
+CPPFLAGS				= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
 RM					= rm -f
 DFLAGS				= -MMD -MP
 
-SRC					= main.cpp 
+SRC					= main.cpp Serializer.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)
+BIN					= serialized_data.bin
 
 start:
 					@echo "$(BLUE) ◎ Starting build process...$(DEF_COLOR)"
@@ -60,6 +61,8 @@ clean:
 fclean: 			clean
 					@echo "$(RED) ◎ Removing executable $(NAME)...$(DEF_COLOR)"
 					@$(RM) $(NAME) $(OBJS_DIR)
+					@echo "$(RED) ◎ Removing binary $(BIN)...$(DEF_COLOR)"
+					@$(RM) $(BIN)
 					@echo "$(GREEN) ◎ Full cleanup completed! ✓$(DEF_COLOR)"
 
 re: 				fclean all
