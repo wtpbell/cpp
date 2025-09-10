@@ -76,7 +76,7 @@ int main()
 
 	std::cout << CYAN << "\n===Dog brain initialization ===\n" << RESET;
 	Dog* snoppy = new Dog();
-	std::cout << BOLD << "snoppy: " << *snopp << RESET << std::endl;
+	std::cout << BOLD << "snoppy: " << *snoppy << RESET << std::endl;
 	snoppy->makeSound();
 	snoppy->setIdea(1, "Where is the ball?");
 	snoppy->setIdea(02, "I know you are hiding it.");
