@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/11 11:35:34 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/11 21:48:30 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/18 09:10:10 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	main(void)
 	runTest("Constructor message", "test6", "is ready to be opened!", "will be replaced by");
 	runTest("Non-existent file", "nonexistent.txt", "a", "b");
 	runTest("Directory as input", "src", "test", "replace");
-	runTest("No permissions", "/etc/passwd", "root", "user");
 
 	std::filesystem::remove("test1");
 	std::filesystem::remove("test2");

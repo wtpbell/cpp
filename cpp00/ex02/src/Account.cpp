@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/08 15:34:17 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/08 20:02:12 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/10 09:33:33 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	Account::_nbAccounts = 0;
 int	Account::_totalAmount = 0;
 int	Account::_totalNbDeposits = 0;
 int	Account::_totalNbWithdrawals = 0;
+
 Account::Account(int initial_deposit)
 {
 	_displayTimestamp();

@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/05 18:05:14 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/08 13:19:31 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/10 09:40:51 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,5 @@ class PhoneBook
 };
 
 bool		isValidIndex(const std::string& input, unsigned int& index);
-std::string	truncateField(const std::string& str); 
+std::string	truncateField(const std::string& str);
 #endif

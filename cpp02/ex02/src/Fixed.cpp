@@ -5,8 +5,8 @@
 /*                                                     +:+                    */
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2025/04/16 09:30:52 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/16 09:30:53 by bewong        ########   odam.nl         */
+/*   Created: 2025/04/15 17:24:16 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/18 10:00:20 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Fixed::Fixed(const Fixed& other)
 
 Fixed&	Fixed::operator=(const Fixed& rhs)
 {
-	if (this != &rhs)
+	if (*this != rhs)
 		this->setRawBits(rhs.getRawBits());
 	return (*this);
 }

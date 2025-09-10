@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   bsp.cpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 09:31:04 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/17 16:24:48 by bewong           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   bsp.cpp                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bewong <bewong@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/16 09:31:04 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/18 12:39:21 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool bsp(Point const a, Point const b, Point const c, Point const point)
 	if (denom == 0) //degenerate (the pts lie on the straight line)
 		return (false);
 	float weightA = ((y2 - y3)*(px - x3) + (x3 - x2)*(py - y3)) / denom;
-	float weightB  = ((y3 - y1)*(px - x3) + (x1 - x3)*(py - y3)) / denom; 
+	float weightB  = ((y3 - y1)*(px - x3) + (x1 - x3)*(py - y3)) / denom;
 	float weightC = 1.0f - weightA - weightB;
 
 	// const float EPS = 1e-1; //small number to account for floating point precision because of rounding errors

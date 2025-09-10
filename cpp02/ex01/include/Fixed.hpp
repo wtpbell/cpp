@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/14 17:08:12 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/14 17:08:13 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/15 17:26:32 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ class Fixed
 {
 	private:
 			int					_fixedPoint;
-			static const int		_fractionalBits = 8;
+			static const int	_fractionalBits = 8;
 
-		public:
+	public:
 			Fixed();
 			Fixed(const int value);
 			Fixed(const float value);
@@ -33,6 +33,8 @@ class Fixed
 			void	setRawBits(int const raw);
 			float	toFloat(void) const;
 			int		toInt(void) const;
-};
+		};
+		
+	std::ostream& operator<<(std::ostream& os, const Fixed& obj);
 
 #endif

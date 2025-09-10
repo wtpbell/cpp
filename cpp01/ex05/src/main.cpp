@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/13 14:14:19 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/13 14:14:20 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/18 09:11:49 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(void)
 {
-	Har	 harl;
+	Harl	 harl;
 
 	std::cout << CYAN << "=== Testing all Harl's complaint levels ==="  << RESET << std::endl;
 	std::cout << std::string(50, '-') << std::endl;

@@ -19,7 +19,7 @@ CPP					= c++
 CFLAGS				= -Wextra -Wall -Werror -std=c++17 $(INC)
 RM					= rm -f
 
-SRC					= main.cpp Fixed.cpp 
+SRC					= main.cpp Fixed.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 

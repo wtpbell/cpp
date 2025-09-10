@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Point.cpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 09:31:11 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/17 10:42:08 by bewong           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   Point.cpp                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bewong <bewong@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/16 09:31:11 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/18 12:35:27 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ Fixed	Point::getY(void) const
 	return (this->y);
 }
 
-std::iostream&	operator<<(std::iostream& os, const Point& obj)
+std::ostream&	operator<<(std::ostream& os, const Point& obj)
 {
 	os << "(" << obj.getX() << ", " << obj.getY() << ")";
 	return (os);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   transformFile.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:45:52 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/17 23:01:22 by bewong           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   transformFile.cpp                                  :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bewong <bewong@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/09 20:45:52 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/11 11:06:49 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	TransformFile::write(void)
 		}
 		else
 		{
-			pos = 0; 
+			pos = 0;
 			while ((pos = line.find(this->str1, pos)) != std::string::npos)
 			{
 				line = line.substr(0, pos) + this->str2 + line.substr(pos + this->str1.length());

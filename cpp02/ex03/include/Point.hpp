@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Point.hpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 09:31:01 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/17 10:42:23 by bewong           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   Point.hpp                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bewong <bewong@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/16 09:31:01 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/18 12:35:22 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ class Point
 			Fixed	getY(void) const;
 };
 
-std::iostream& operator<<(std::iostream& os, const Point& obj);
+std::ostream& operator<<(std::ostream& os, const Point& obj);
 
 #endif

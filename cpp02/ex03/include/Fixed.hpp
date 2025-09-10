@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/16 09:30:56 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/16 09:30:57 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/18 11:49:24 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ class	Fixed
 			Fixed	operator*(const Fixed& rhs) const;
 			Fixed	operator/(const Fixed& rhs) const;
 
-			Fixed&	operator++(void);
-			Fixed	operator++(int);
-			Fixed&	operator--(void);
-			Fixed	operator--(int);
+			Fixed&	operator++(void); // ++i
+			Fixed	operator++(int); // i++
+			Fixed&	operator--(void); // --i
+			Fixed	operator--(int); // i--
 
 			static Fixed&	min(Fixed& a, Fixed& b);
 			static const	Fixed&	min(const Fixed& a, const Fixed& b);

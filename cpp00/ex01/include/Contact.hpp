@@ -6,14 +6,13 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/04/05 18:03:50 by bewong        #+#    #+#                 */
-/*   Updated: 2025/04/08 14:15:14 by bewong        ########   odam.nl         */
+/*   Updated: 2025/04/10 09:20:35 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONTACT_HPP
 # define CONTACT_HPP
 
-#include <iostream>
 # define YELLOW	"\033[0;33m"
 # define GREEN	"\033[0;32m"
 # define BOLD	"\033[1m"
@@ -22,6 +21,9 @@
 # define RED	"\033[0;91m"
 # define CYAN	"\033[0;96m"
 # define MAGENTA "\033[0;95m"
+
+#include <iostream>
+
 class Contact
 {
 	

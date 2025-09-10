@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 09:31:08 by bewong            #+#    #+#             */
-/*   Updated: 2025/04/17 16:22:08 by bewong           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   main.cpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bewong <bewong@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2025/04/16 09:31:08 by bewong        #+#    #+#                 */
+/*   Updated: 2025/04/18 12:38:26 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	main(void)
 	};
 	const char* results[] = {"outside", "inside"};
 	
-	for (size_t i = 0; i < sizeof(testPoints)/sizeof(testPoints[0]); ++i) {
-		std::cout << "Point (" << testPoints[i].getX().toFloat() << ", " << testPoints[i].getY().toFloat() << ") is "
+ 	for (size_t i = 0; i < sizeof(testPoints)/sizeof(testPoints[0]); ++i) {
+		std::cout << "Point " << testPoints[i] << " is "
 				  << (bsp(a, b, c, testPoints[i]) ? results[1] : results[0])
 				  << " the triangle." << std::endl;
 	}
@@ -81,7 +81,7 @@ int	main(void)
 
 	for (size_t i = 0; i < sizeof(testPoints2)/sizeof(testPoints2[0]); ++i)
 	{
-		std::cout << "Point (" << testPoints2[i].getX() << ", " << testPoints2[i].getY() << ") is "
+		std::cout << "Point " << testPoints2[i] << " is "
 				  << (bsp(ta, tb, tc, testPoints2[i]) ? results[1] : results[0])
 				  << " the triangle." << std::endl;
 	}
