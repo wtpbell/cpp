@@ -14,7 +14,8 @@
 # define ARRAY_HPP
 
 #include <iostream>
-#include <exception>
+#include <utility>
+#include <cstdint>
 
 template <typename T>
 class	Array
@@ -26,8 +27,8 @@ class	Array
 		Array& operator=(const Array& other);
 		~Array(void);
 
-		Array(const Array&& other) noexcept;
-		Array& operator=(const Array&& other) noexcept;
+		Array(Array&& other) noexcept;
+		Array& operator=(Array&& other) noexcept;
 		
 		//overloading [] operator to access elements in array, useful for checking bounds
 		// must return by reference in function as array element can be put on left side (lvalue)
@@ -36,12 +37,12 @@ class	Array
 		uint32_t	size(void) const;
 
 	private:
-		T*			array_ = nullptr;
 		uint32_t	size_ = 0;
+		T*			array_ = nullptr;
 
 };
 
 #include "Array.tpp"
 
-#endif
+#endif //ARRAY_HPP
 
