@@ -25,10 +25,14 @@
 #define MIN_DOUBLE std::numeric_limits<double>::min()
 #define MAX_DOUBLE std::numeric_limits<double>::max()
 #define PSEUDO_INF "inf"
+#define PSEUDO_INF_PLUS "+inf"
 #define PSEUDO_INF_MIN "-inf"
 #define PSEUDO_NAN "nan"
+#define PSEUDO_NAN_PLUS "+nan"
 #define PSEUDO_NANF "nanf"
+#define PSEUDO_NANF_PLUS "+nanf"
 #define PSEUDO_INFF "inff"
+#define PSEUDO_INFF_PLUS "+inff"
 #define PSEUDO_INFF_MIN "-inff"
 #define ASCII_MAX 127
 #define ASCII_MIN 0
@@ -63,8 +67,8 @@ class ScalarConverter
 		ScalarConverter(const ScalarConverter&) = delete;
 		ScalarConverter& operator=(const ScalarConverter&) = delete;
 		~ScalarConverter() = delete;
-		ScalarConverter(const ScalarConverter&&) noexcept = delete;
-		ScalarConverter& operator=(const ScalarConverter&&) noexcept = delete;
+		ScalarConverter(ScalarConverter&&) noexcept = delete;
+		ScalarConverter& operator=(ScalarConverter&&) noexcept = delete;
 		
 		static void convert(const std::string& literal);
 

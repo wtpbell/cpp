@@ -19,18 +19,20 @@
 
 FType ScalarConverter::identifyFloatType(const std::string& literal, float value)
 {
-	if (literal == PSEUDO_NANF || std::isnan(value))
+	if (literal == PSEUDO_NANF || literal == PSEUDO_NANF_PLUS || std::isnan(value))
 		return FType::FTYPE_NAN;
-	if (literal == PSEUDO_INFF || literal == PSEUDO_INFF_MIN || std::isinf(value))
+	if (literal == PSEUDO_INFF || literal == PSEUDO_INFF_PLUS
+		|| literal == PSEUDO_INFF_MIN ||std::isinf(value))
 		return FType::FTYPE_INF;
 	return FType::NORMAL;
 }
 
 FType ScalarConverter::identifyDoubleType(const std::string& literal, double value)
 {
-	if (literal == PSEUDO_NAN || std::isnan(value))
+	if (literal == PSEUDO_NAN || literal == PSEUDO_NAN_PLUS ||std::isnan(value))
 		return FType::FTYPE_NAN;
-	if (literal == PSEUDO_INF || literal == PSEUDO_INF_MIN || std::isinf(value))
+	if (literal == PSEUDO_INF || literal == PSEUDO_INF_PLUS
+		|| literal == PSEUDO_INF_MIN || std::isinf(value))
 		return FType::FTYPE_INF;
 	return FType::NORMAL;
 }
@@ -133,20 +135,24 @@ void ScalarConverter::convertFloatAndPrint(const std::string& literal)
 
 		type = identifyFloatType(literal, f);
 
-		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF || f < ASCII_MIN || f > ASCII_MAX)
+		if (type == FType::FTYPE_NAN
+			|| type == FType::FTYPE_INF
+			|| f < ASCII_MIN || f > ASCII_MAX)
 			std::cout << "char: impossible" << std::endl;
 		else
 			printChar(static_cast<unsigned char>(f));
 
 		d = static_cast<double>(f);
-		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF ||
-			d < static_cast<double>(MIN_INT) || d > static_cast<double>(MAX_INT))
+		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF
+			|| d < static_cast<double>(MIN_INT) || d > static_cast<double>(MAX_INT))
 			std::cout << "int: impossible" << std::endl;
 		else
 			printInt(static_cast<int>(d));
 
 		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF)
 			printPseudo(type, true, (f < 0));
+		else if (f != 0.0f && std::fabs(f) < MIN_FLOAT)
+			std::cout << "float: impossible" << std::endl;
 		else
 		{
 			printFloat(f);
@@ -171,27 +177,32 @@ void ScalarConverter::convertDoubleAndPrint(const std::string& literal)
 
 		type = identifyDoubleType(literal, d);
 
-		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF || d < ASCII_MIN || d > ASCII_MAX)
+		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF
+			|| d < ASCII_MIN || d > ASCII_MAX)
 			std::cout << "char: impossible" << std::endl;
 		else
 			printChar(static_cast<unsigned char>(d));
 
-		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF ||
-			d < static_cast<double>(MIN_INT) || d > static_cast<double>(MAX_INT))
+		if (type == FType::FTYPE_NAN 
+			|| type == FType::FTYPE_INF
+			|| d < static_cast<double>(MIN_INT) || d > static_cast<double>(MAX_INT))
 			std::cout << "int: impossible" << std::endl;
 		else
 			printInt(static_cast<int>(d));
 
-		if (d < static_cast<double>(MIN_FLOAT) || d > static_cast<double>(MAX_FLOAT))
+		if (d == 0.0)
+			std::cout << "float: 0.0" << std::endl;
+		else if (d < static_cast<double>(MIN_FLOAT) || d > static_cast<double>(MAX_FLOAT))
 			std::cout << "float: impossible" << std::endl;
-		else
+		else 
 			printFloat(static_cast<float>(d));
 
 		if (type == FType::FTYPE_NAN || type == FType::FTYPE_INF)
 			printPseudo(type, false, (d < 0));
+		else if (d != 0.0 && std::fabs(d) < MIN_DOUBLE)
+			std::cout << "double: impossible" << std::endl;
 		else
 			printDouble(d);
-
 	}
 	catch (const std::exception& e)
 	{
@@ -204,14 +215,15 @@ static void convertPseudoAndPrint(const std::string& literal)
 	FType	fType;
 	FType	dType;
 	
-	if (literal == PSEUDO_NANF || literal == PSEUDO_INFF || literal == PSEUDO_INFF_MIN)
+	if (literal == PSEUDO_NANF || literal == PSEUDO_INFF || literal == PSEUDO_INFF_MIN
+		|| literal == PSEUDO_NANF_PLUS || literal == PSEUDO_INFF_PLUS)
 	{
-		fType = (literal == PSEUDO_NANF) ? FType::FTYPE_NAN : FType::FTYPE_INF;
-		dType = (literal == PSEUDO_NANF) ? FType::FTYPE_NAN : FType::FTYPE_INF;
+		fType = (literal == PSEUDO_NANF || literal == PSEUDO_NANF_PLUS) ? FType::FTYPE_NAN : FType::FTYPE_INF;
+		dType = (literal == PSEUDO_NANF || literal == PSEUDO_NANF_PLUS) ? FType::FTYPE_NAN : FType::FTYPE_INF;
 	}
 	else
 	{
-		dType = (literal == PSEUDO_NAN) ? FType::FTYPE_NAN : FType::FTYPE_INF;
+		dType = (literal == PSEUDO_NAN || literal == PSEUDO_NAN_PLUS) ? FType::FTYPE_NAN : FType::FTYPE_INF;
 		fType = dType;
 	}
 

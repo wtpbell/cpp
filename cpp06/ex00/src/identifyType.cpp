@@ -19,9 +19,11 @@ static bool isPseudo(const std::string& literal, size_t len)
 {
 	if (len < 3 || len > 5)
 		return (false);
-	return (literal == PSEUDO_NAN || literal == PSEUDO_INF ||
-			literal == PSEUDO_INF_MIN || literal == PSEUDO_NANF ||
-			literal == PSEUDO_INFF || literal == PSEUDO_INFF_MIN);
+	return (literal == PSEUDO_NAN || literal == PSEUDO_NAN_PLUS 
+		|| literal == PSEUDO_NANF || literal == PSEUDO_NANF_PLUS
+		|| literal == PSEUDO_INF || literal == PSEUDO_INF_PLUS
+		|| literal == PSEUDO_INF_MIN || literal == PSEUDO_INFF 
+		|| literal == PSEUDO_INFF_PLUS || literal == PSEUDO_INFF_MIN);
 }
 
 static bool isChar(const std::string& literal, size_t len)
