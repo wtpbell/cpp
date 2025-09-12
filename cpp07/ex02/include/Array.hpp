@@ -17,6 +17,16 @@
 #include <utility>
 #include <cstdint>
 
+# define YELLOW	"\033[0;33m"
+# define GREEN	"\033[0;32m"
+# define BOLD	"\033[1m"
+# define UNDER	"\033[4m"
+# define RESET	"\033[0m"
+# define RED	"\033[0;91m"
+# define CYAN	"\033[0;96m"
+# define MAGENTA "\033[0;95m"
+#define ORANGE	"\033[38;5;208m"
+
 template <typename T>
 class	Array
 {

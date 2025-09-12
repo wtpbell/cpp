@@ -14,11 +14,11 @@
 
 int main(void)
 {
-	std::cout << "\n=== Testing with empty array ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with empty array ===" << RESET << std::endl;
 	Array<int> emptyArray;
 	std::cout << "Size: " << emptyArray.size() << std::endl;
 
-	std::cout << "\n=== Testing with creating array with size ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with creating array with size ===" << RESET << std::endl;
 	try
 	{
 		Array<int> array(5);
@@ -31,10 +31,10 @@ int main(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with string array ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with string array ===" << RESET << std::endl;
 	try
 	{
 		Array<std::string> stringArray(5);
@@ -46,10 +46,10 @@ int main(void)
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with array within array ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with array within array ===" << RESET << std::endl;
 	try
 	{
 		Array<Array<std::string>> array(5);
@@ -68,11 +68,11 @@ int main(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
 
-	std::cout << "\n=== Testing with out of bound index ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with out of bound index ===" << RESET << std::endl;
 	Array<int> array(5);
 	try
 	{
@@ -80,10 +80,10 @@ int main(void)
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Array range " << "0 - " << array.size() - 1 << ": " << e.what() << std::endl;
+		std::cerr << RED << "Array range " << "0 - " << array.size() - 1 << ": " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with copy assignment operator ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with copy assignment operator ===" << RESET << std::endl;
 	try
 	{
 		Array<double> originalArray(5);
@@ -98,10 +98,10 @@ int main(void)
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with copy constructor ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with copy constructor ===" << RESET << std::endl;
 	try
 	{
 		Array<int> array2(5);
@@ -119,10 +119,10 @@ int main(void)
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with move constructor ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with move constructor ===" << RESET << std::endl;
 	try
 	{
 		Array<int> array3(5);
@@ -136,10 +136,10 @@ int main(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with move assignment operator ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with move assignment operator ===" << RESET << std::endl;
 	try
 	{
 		Array<char> array4(5);
@@ -162,10 +162,10 @@ int main(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 
-	std::cout << "\n=== Testing with destructor ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with destructor ===" << RESET << std::endl;
 	try
 	{
 		Array<int> array5(10);
@@ -173,7 +173,7 @@ int main(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
 	return (0);
 }
