@@ -1,5 +1,7 @@
 # === Build Artifacts ===
-scalarConverter
+Array
+iter
+whatever
 objs/
 *.o
 *.d
@@ -15,12 +17,8 @@ Thumbs.db           # Windows
 *.bak
 *.tmp
 
-# === CMake (if added later) ===
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-compile_commands.json
+# === VSCode ===
+.vscode/
 
 # === Clang Format ===
 clang-format
