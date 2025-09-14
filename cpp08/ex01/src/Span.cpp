@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include "Span.hpp"
+#include <limits>
 
 // .reserve ensure the vector has at least capacity for N elements
 // if the capacity is already greater or equal to N, it does nothing
 // otherwise std::vector will re-allocate memory for N elements
-Span::Span(uint_32_t N)
+Span::Span(uint32_t N)
 {
 	storage_.reserve(N);
 }
@@ -54,7 +55,19 @@ int Span::longestSpan(void) const
 	return (*max_it - *min_it);
 }
 
+// push_back ~ emplace_back
+// push_back create a temporary object, copy / move it into the container
+// emplace_back construct the object directly in the container, more efficient
 void	Span::addNumber(int n)
 {
-	
+	if (storage_.size() >= storage_.capacity())
+		throw std::runtime_error("Container is full");
+	storage_.emplace_back(n);
+}
+
+int Span::operator[](size_t index) const
+{
+	if (index >= storage_.size())
+		throw std::runtime_error("Index out of bounds");
+	return (storage_[index]);
 }

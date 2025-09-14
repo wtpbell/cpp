@@ -21,7 +21,7 @@ CPPFLAGS			= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
 RM					= rm -f
 DFLAGS				= -MMD -MP
 
-SRC					= main.cpp
+SRC					= main.cpp Span.cpp
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)

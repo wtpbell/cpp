@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdint>
 
 # define YELLOW	"\033[0;33m"
 # define GREEN	"\033[0;32m"
@@ -45,9 +46,14 @@ class Span
 		int			longestSpan(void) const;
 		void		addNumber(int n);
 		template <typename Iterator>
-		void		addNumber(Iterator begin, Iterator end);
-		
-	private:
+		void		addNumber(Iterator begin, Iterator end)
+		{
+			if (storage_.size() + std::distance(begin, end) > storage_.capacity())
+				throw std::runtime_error("Container is full");
+			storage_.insert(storage_.end(), begin, end);
+		}
+		int			operator[](size_t index) const;
+private:
 		std::vector<int> storage_;
 };
 
