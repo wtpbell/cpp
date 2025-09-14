@@ -31,34 +31,33 @@ void	upperCase(std::string &str)
 		str[i] = std::toupper(str[i]);
 }
 
-int main(void)
+void	testIntArray(void)
 {
 	std::cout << CYAN << "\n=== Testing with int array ===" << RESET << std::endl;
 	int intArr[] = {1, 2, 3, 4, 5};
 	std::cout << "Original intArr: \n";
 	::iter(intArr, 5, print<int>);
 	std::cout << std::endl;
+}
 
-	std::cout << "Adjusted intArr: \n";
-	::iter(intArr, 5, adjustValue);
-	::iter(intArr, 5, print<int>);
-	std::cout << std::endl;
-
+void	testStringArray(void)
+{
 	std::cout << CYAN << "\n=== Testing with string array ===" << RESET << std::endl;
 	std::string stringArr[] = {"Hello", "World", "!"};
 	std::cout << "Original stringArr: \n";
 	::iter(stringArr, 3, print<std::string>);
-	std::cout << std::endl;
-
-	std::cout << "Upper case string: \n";
+	std::cout << "\nUpper case stringArr: \n";
 	::iter(stringArr, 3, upperCase);
 	::iter(stringArr, 3, print<std::string>);
 	std::cout << std::endl;
+}
 
-	// lambda create an anonymous function object(closure) - unnamed function object with a call operator
-	// syntax: [capture](parameters) -> return_type { body }
-	// [] not using any variables out of the scope;
-	// lambda function is a concrete object, the operator() is a template that gets instantiated when called
+// lambda create an anonymous function object(closure) - unnamed function object with a call operator
+// syntax: [capture](parameters) -> return_type { body }
+// [] not using any variables out of the scope;
+// lambda function is a concrete object, the operator() is a template that gets instantiated when called
+void	testLambda(void)
+{
 	std::cout << CYAN << "\n === Testing with lambda function ===" << RESET << std::endl;
 	int intArr2[] = {1, 2, 3, 4, 5};
 	std::cout << "Original intArr2: \n";
@@ -69,17 +68,31 @@ int main(void)
 	::iter(intArr2, 5, [](auto &value){ value *= 2; });
 	::iter(intArr2, 5, print<int>);
 	std::cout << std::endl;
+}
 
+void	testConstIntArray(void)
+{
 	std::cout << CYAN << "\n === Testing with const int array ===" << RESET << std::endl;
 	const int constIntArr[] = {2, 4, 6, 8, 10};
 	std::cout << "Original constIntArr: \n";
 	::iter(constIntArr, 5, print<int>);
 	std::cout << std::endl;
+}
 
+void	testConstStringArray(void)
+{
 	std::cout << CYAN << "\n === Testing with const string array ===" << RESET << std::endl;
 	const std::string constStringArr[] = {"Bye", "World", "!"};
 	::iter(constStringArr, 3, print<const std::string>);
 	std::cout << std::endl;
+}
 
+int main(void)
+{
+	testIntArray();
+	testStringArray();
+	testLambda();
+	testConstIntArray();
+	testConstStringArray();
 	return (0);
 }

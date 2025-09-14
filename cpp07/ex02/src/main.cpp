@@ -12,7 +12,7 @@
 
 #include "Array.hpp"
 
-int main(void)
+void	testEmptyArray(void)
 {
 	std::cout << CYAN << "\n=== Testing with empty array ===" << RESET << std::endl;
 	Array<int> emptyArray;
@@ -33,7 +33,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testStringArray(void)
+{
 	std::cout << CYAN << "\n=== Testing with string array ===" << RESET << std::endl;
 	try
 	{
@@ -48,7 +51,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testArrayWithinArray(void)
+{
 	std::cout << CYAN << "\n=== Testing with array within array ===" << RESET << std::endl;
 	try
 	{
@@ -70,8 +76,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
-
+void	testOutOfBoundIndex(void)
+{
 	std::cout << CYAN << "\n=== Testing with out of bound index ===" << RESET << std::endl;
 	Array<int> array(5);
 	try
@@ -82,7 +90,10 @@ int main(void)
 	{
 		std::cerr << RED << "Array range " << "0 - " << array.size() - 1 << ": " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testCopyAssignmentOperator(void)
+{
 	std::cout << CYAN << "\n=== Testing with copy assignment operator ===" << RESET << std::endl;
 	try
 	{
@@ -100,7 +111,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testCopyConstructor(void)
+{
 	std::cout << CYAN << "\n=== Testing with copy constructor ===" << RESET << std::endl;
 	try
 	{
@@ -121,7 +135,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testMoveConstructor(void)
+{
 	std::cout << CYAN << "\n=== Testing with move constructor ===" << RESET << std::endl;
 	try
 	{
@@ -138,7 +155,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testMoveAssignmentOperator(void)
+{
 	std::cout << CYAN << "\n=== Testing with move assignment operator ===" << RESET << std::endl;
 	try
 	{
@@ -164,7 +184,10 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
 
+void	testDestructor(void)
+{
 	std::cout << CYAN << "\n=== Testing with destructor ===" << RESET << std::endl;
 	try
 	{
@@ -175,5 +198,18 @@ int main(void)
 	{
 		std::cerr << RED << "Exception: " << e.what() << RESET << std::endl;
 	}
+}
+
+int main(void)
+{
+	testEmptyArray();
+	testStringArray();
+	testArrayWithinArray();
+	testOutOfBoundIndex();
+	testCopyAssignmentOperator();
+	testCopyConstructor();
+	testMoveConstructor();
+	testMoveAssignmentOperator();
+	testDestructor();
 	return (0);
 }
