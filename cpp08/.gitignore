@@ -1,0 +1,25 @@
+# === Build Artifacts ===
+span
+easyfind
+mutantStack
+objs/
+*.o
+*.d
+
+# === OS Files ===
+.DS_Store           # macOS
+Thumbs.db           # Windows
+
+# === Editor Backups ===
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# === VSCode ===
+.vscode/
+
+# === Clang Format ===
+clang-format
+
