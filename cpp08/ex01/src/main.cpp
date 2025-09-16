@@ -34,7 +34,7 @@ static int	randomNumberGenerator(int min, int max)
 
 void	testPdfExample(void)
 {
-	std::cout << "\n=== Testing with pdf example ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with pdf example ===" << RESET << std::endl;
 	try
 	{
 		Span	sp = Span(5);
@@ -49,13 +49,13 @@ void	testPdfExample(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Error in pdf example test: " << e.what() << std::endl;
+		std::cout << RED << "Error in pdf example test: " << e.what() << RESET << std::endl;
 	}
 }
 
 void	testLargeContainer(void)
 {
-	std::cout << "\n=== Testing with large container ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with large container ===" << RESET << std::endl;
 	try
 	{
 		Span	largeSpan = Span(10000);
@@ -66,13 +66,13 @@ void	testLargeContainer(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Error in large container test: " << e.what() << std::endl;
+		std::cout << RED << "Error in large container test: " << e.what() << RESET << std::endl;
 	}
 }
 
 void	testRangeInsertion(void)
 {
-	std::cout << "\n=== Testing with Range Insertion ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with Range Insertion ===" << RESET << std::endl;
 	try
 	{
 		Span rangeSpan = Span(10);
@@ -86,13 +86,13 @@ void	testRangeInsertion(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Error in range insertion test: " << e.what() << std::endl;
+		std::cout << RED << "Error in range insertion test: " << e.what() << RESET << std::endl;
 	}
 }
 
 void	testException(void)
 {
-	std::cout << "\n=== Testing with exception ===" << std::endl;
+	std::cout << CYAN << "\n=== Testing with exception ===" << RESET << std::endl;
 	try
 	{
 		Span	sp = Span(1);
@@ -101,7 +101,7 @@ void	testException(void)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Error in exception test: " << e.what() << std::endl;
+		std::cout << RED << "Error in exception test: " << e.what() << RESET << std::endl;
 	}
 }
 

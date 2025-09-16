@@ -61,13 +61,13 @@ int Span::longestSpan(void) const
 void	Span::addNumber(int n)
 {
 	if (storage_.size() >= storage_.capacity())
-		throw std::runtime_error("Container is full");
+		throw std::out_of_range("Container is full");
 	storage_.emplace_back(n);
 }
 
 int Span::operator[](size_t index) const
 {
 	if (index >= storage_.size())
-		throw std::runtime_error("Index out of bounds");
+		throw std::out_of_range("Index out of bounds");
 	return (storage_[index]);
 }

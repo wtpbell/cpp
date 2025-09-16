@@ -92,8 +92,6 @@ void	addToContainer(Container& container, T&& value)
 		container.emplace_back(std::forward<T>(value));
 	else if constexpr (requires { container.push(std::forward<T>(value)); })
 		container.push(std::forward<T>(value));
-	else if constexpr (requires { container.emplace_front(std::forward<T>(value)); })
-		container.emplace_front(std::forward<T>(value));
 	else
 		throw std::runtime_error("Container type not supported");
 }
@@ -107,8 +105,6 @@ void	popFromContainer(Container& container)
 		container.pop();
 	else if constexpr (requires { container.pop_back(); })
 		container.pop_back();
-	else if constexpr (requires { container.pop_front(); })
-		container.pop_front();
 	else
 		throw std::runtime_error("Container type not supported");
 }
@@ -117,9 +113,8 @@ template <typename Container>
 void	printContainerDetail(const Container& container, const std::string& containerType)
 {
 	std::cout << containerType << " elements: ";
-	for (const auto& val : container) {
+	for (const auto& val : container)
 		std::cout << val << " ";
-	}
 	std::cout << "\n" << containerType << " size: " << container.size() << std::endl;
 }
 
