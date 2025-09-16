@@ -52,7 +52,4 @@ class MutantStack : public std::stack<T>
 		const_reverse_iterator rend() const { return this->c.rend(); }
 };
 
-// Remove the include of MutantStack.tpp since we're implementing everything in the header
-// #include "MutantStack.tpp"
-
 #endif
