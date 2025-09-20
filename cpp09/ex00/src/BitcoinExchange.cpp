@@ -15,14 +15,23 @@
 #include <iostream>
 #include <string>
 #include <regex>
-#include <optional>
 
-std::chrono::year_month_day	BitcoinExchange::validateDate(const std::string& date)
+float	BitcoinExchange::getExchangeRate(const chrono& date) const
 {
-	std::chrono::year_month_day	ymd;
-	int							year;
-	int							month;
-	int							day;
+	auto it = exchangeData_.lower_bound(date);
+	if (it == exchangeData_.begin() && it->first != date)
+		return (-1);
+	if (it == exchangeData_.end() && it->first != date)
+		--it;
+	return (it->second);
+}
+
+chrono	BitcoinExchange::validateDate(const std::string& date)
+{
+	chrono	ymd;
+	int		year;
+	int		month;
+	int		day;
 
 	if (date.empty() || std::count(date.begin(), date.end(), '-') != 2)
 		return {};
@@ -32,9 +41,9 @@ std::chrono::year_month_day	BitcoinExchange::validateDate(const std::string& dat
 		year = std::stoi(date.substr(0, date.find('-')));
 		month = std::stoi(date.substr(date.find('-') + 1, date.rfind('-')));
 		day = std::stoi(date.substr(date.rfind('-') + 1));
-		ymd = std::chrono::year_month_day{std::chrono::year{ year },
-				std::chrono::month{ month },
-				std::chrono::day{ day }};
+		ymd = chrono{std::chrono::year{ year },
+				std::chrono::month{ static_cast<unsigned int>(month) },
+				std::chrono::day{ static_cast<unsigned int>(day) }};
 		return (ymd);
 	}
 	catch (std::exception& e)
@@ -44,7 +53,7 @@ std::chrono::year_month_day	BitcoinExchange::validateDate(const std::string& dat
 	}
 }
 // optional can either contain a value or nth at all. 
-std::optional<float> stringToFloat(const std::string& valueString)
+std::optional<float>	BitcoinExchange::stringToFloat(const std::string& valueString)
 {
 	auto trimString = valueString;
 
@@ -56,17 +65,18 @@ std::optional<float> stringToFloat(const std::string& valueString)
 		std::cerr << RED << "Error stringToFloat: empty string" << RESET << std::endl;
 		return (std::nullopt);
 	}
+	static const std::regex floatRegex(R"(^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$)");
 
-	static const std::regex	floatRegex(R"(^[+]?\d*\.?\d+([eE][+-]?\d+)?$)");
 	if (!std::regex_match(trimString, floatRegex))
 	{
-		std::cerr << RED << "Error stringToFloat: " << trimString << " is not a valid float" << RESET << std::endl;
+		std::cerr << RED << "Error: it is not a valid float" << RESET << std::endl;
 		return (std::nullopt);
 	}
 
 	try
 	{
-		return (std::stof(trimString));
+		float	number = std::stof(trimString);
+		return (number);
 	}
 	catch (std::exception& e)
 	{
@@ -85,11 +95,11 @@ bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 		return (false);
 	}
 
-	std::string					line;
-	std::chrono::year_month_day	ymd;
-	std::string					dateString;
-	std::string					valueString;
-	std::optional<float>		value;
+	std::string				line;
+	chrono					ymd;
+	std::string				dateString;
+	std::string				valueString;
+	std::optional<float>	value;
 
 	std::getline(dataFile, line);
 	while (std::getline(dataFile, line))
@@ -103,11 +113,12 @@ bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 			ymd = validateDate(dateString);
 			if (!ymd.ok() || ymd < minDate_ || ymd > maxDate_)
 			{
-				std::cerr << RED << "Error loadData: invalid date on line: " << line << " with date: " << dateString << RESET << std::endl;
+				std::cerr << RED << "Error loadData: invalid date on line: " 
+							<< line << " with date: " << dateString << RESET << std::endl;
 				return (false);
 			}
 			value = stringToFloat(valueString);
-			if (!value.has_value() || !validateValue(value.value()))
+			if (!value.has_value())
 			{
 				std::cerr << RED << "Error loadData: invalid value on line: " << line << " with value: " << valueString << RESET << std::endl;
 				return (false);
@@ -122,4 +133,9 @@ bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 	}
 	dataFile.close();
 	return (true);
+}
+
+void	BitcoinExchange::logData(void)
+{
+	
 }
