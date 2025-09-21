@@ -109,7 +109,7 @@ double	BitcoinExchange::stringToDouble(const std::string& valueString)
 	}
 }
 
-void	BitcoinExchange::loadData(const std::filesystem::path& filePath)
+bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 {
 	std::ifstream	dataFile(filePath);
 	std::string		line;
@@ -117,19 +117,19 @@ void	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 	if (!dataFile.is_open())
 	{
 		std::cerr << RED << "Error: could not open file" << RESET << std::endl;
-		return ;
+		return (false);
 	}
 
 	if (!std::getline(dataFile, line))
 	{
 		std::cerr << RED << "Error: empty file" << RESET << std::endl;
-		return ;
+		return (false);
 	}
 	line = trim(line);
 	if (line != "date,exchange_rate")
 	{
 		std::cerr << RED << "Error: invalid csv header" << RESET << std::endl;
-		return ;
+		return (false);
 	}
 	while (std::getline(dataFile, line))
 	{
@@ -138,6 +138,7 @@ void	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 		processDataFileLine(line);
 	}
 	dataFile.close();
+	return (true);
 }
 
 
@@ -157,14 +158,19 @@ void	BitcoinExchange::processDataFileLine(const std::string& line)
 		{
 			std::cerr << RED << "Error loadData: invalid date on line: " 
 						<< line << " with date: " << dateString << RESET << std::endl;
+			return ;
 		}
 		value = stringToDouble(valueString);
 		if (value == -1)
+		{
 			std::cerr << RED << "Error loadData: invalid value on line: " << line << " with value: " << valueString << RESET << std::endl;
+			return ;
+		}
 		exchangeData_[ymd] = value;
 	}
 	catch (std::exception& e)
 	{
 		std::cerr << RED << "Error: bad input => " << line << " (" << e.what() << ")" << RESET << std::endl;
+		return ;
 	}
 }

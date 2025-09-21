@@ -43,9 +43,9 @@ class BitcoinExchange
 		BitcoinExchange(BitcoinExchange&& other) noexcept = default;
 		BitcoinExchange& operator=(BitcoinExchange&& other) noexcept = delete;
 
-		void					exchangeData(const std::filesystem::path& filePath);
+		bool					exchangeData(const std::filesystem::path& filePath);
 		void					processInputFileLine(const std::string& line);
-		void					loadData(const std::filesystem::path& filePath);
+		bool					loadData(const std::filesystem::path& filePath);
 		void					processDataFileLine(const std::string& line);
 		chrono					validateDate(const std::string& date);
 		double					stringToDouble(const std::string& valueString);

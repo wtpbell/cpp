@@ -16,19 +16,28 @@
 #include <iomanip>
 #include <cmath>
 
-void	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
+bool	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 {
 	std::ifstream	inputFile(filePath);
 	std::string		line;
 
 	if (!inputFile.is_open())
+	{
 		std::cerr << RED << "Error: could not open file" << RESET << std::endl;
+		return (false);
+	}
 
 	if (!std::getline(inputFile, line))
+	{
 		std::cerr << RED << "Error: empty file" << RESET << std::endl;
+		return (false);
+	}
 	line = trim(line);
 	if (line != "date | value")
+	{
 		std::cerr << RED << "Error: invalid .txt header" << RESET << std::endl;
+		return (false);
+	}
 	while (std::getline(inputFile, line))
 	{
 		line = trim(line);
@@ -37,6 +46,7 @@ void	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 		processInputFileLine(line);
 	}
 	inputFile.close();
+	return (true);
 }
 
 
@@ -94,8 +104,10 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	BitcoinExchange	exchange;
-	exchange.loadData("data.csv");
+	if (!exchange.loadData("data.csv"))
+		return (1);
 	std::cerr << GREEN << "Data loaded successfully." << RESET << std::endl;
-	exchange.exchangeData(argv[1]);
+	if (!exchange.exchangeData(argv[1]))
+		return (1);
 	return (0);
 }
