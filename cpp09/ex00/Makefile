@@ -17,7 +17,7 @@ OBJS_DIR			= ./objs
 SRCS_DIR			= ./src
 
 CPP					= c++ -std=c++20
-CPPFLAGS			= -Wextra -Wall -Werror   $(INC) #-fsanitize=address
+CPPFLAGS			= -Wextra -Wall -Werror   $(INC) -fsanitize=address
 RM					= rm -f
 DFLAGS				= -MMD -MP
 

@@ -43,29 +43,33 @@ class BitcoinExchange
 		BitcoinExchange(BitcoinExchange&& other) noexcept = default;
 		BitcoinExchange& operator=(BitcoinExchange&& other) noexcept = delete;
 
-		bool					loadData(const std::filesystem::path& filePath);
-		void					logData(void);
-		chrono					validateDate(const std::string& date);
-		std::optional<float>	stringToFloat(const std::string& valueString);
 		bool					exchangeData(const std::filesystem::path& filePath);
-		float					getExchangeRate(const chrono& date) const;
+		void					processInputFileLine(const std::string& line);
+		bool					loadData(const std::filesystem::path& filePath);
+		void					processDataFileLine(const std::string& line);
+		chrono					validateDate(const std::string& date);
+		double					stringToDouble(const std::string& valueString);
+		double					getExchangeRate(const chrono& date) const;
 		template <typename T>
 		constexpr static bool	validateValue(T value);
+		static std::string_view	trim(std::string_view str);
 
 	private:
+		void					logData(const chrono& ymd, double value, double rate) const;
 		const chrono minDate_ = chrono(std::chrono::year{ 2009 }, std::chrono::month{ 1 }, std::chrono::day{ 2 });
 		const chrono maxDate_ = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
-		std::map<chrono, float> exchangeData_;
+		std::map<chrono, double> exchangeData_;
+
 };
 
 template <typename T>
 constexpr bool					BitcoinExchange::validateValue(T value)
 {
-	static_assert(std::is_same_v<T, float> || std::is_same_v<T, int>, "Invalid type");
+	static_assert(std::is_same_v<T, float> || std::is_same_v<T, double> || std::is_same_v<T, int>, "Invalid type");
 	if (value < 0)
-		std::cerr << "Error: not a positive number." << std::endl;
+		std::cerr << RED << "Error: not a positive number." << RESET << std::endl;
 	else if (value > 1000)
-		std::cerr << "Error: too large a number." << std::endl;
+		std::cerr << RED << "Error: too large a number." << RESET << std::endl;
 	return (value >= 0 && value <= 1000);
 }
 #endif // BITCOINEXCHANGE_HPP
