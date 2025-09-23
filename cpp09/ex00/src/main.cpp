@@ -10,13 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.hpp"
-#include <iostream>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
-#include <cmath>
+#include <iostream>
+#include <optional>
 
-bool	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
+#include "BitcoinExchange.hpp"
+
+bool BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 {
 	std::ifstream	inputFile(filePath);
 	std::string		line;
@@ -49,61 +51,44 @@ bool	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 	return (true);
 }
 
-
 void BitcoinExchange::processInputFileLine(const std::string& line)
 {
 	std::string				dateString;
 	std::string				valueString;
 	chrono					ymd;
-	double					value;
+	std::optional<double>	value;
 	double					rate;
 
 	dateString = trim(line.substr(0, line.find('|')));
 	valueString = trim(line.substr(line.find('|') + 1));
+	ymd = validateDate(dateString);
+	value = stringToDouble(valueString);
 
-	try
+	if (valueString.empty() || !ymd.ok() || !value.has_value())
 	{
-		ymd = validateDate(dateString);
-		value = stringToDouble(valueString);
-		if ((!ymd.ok() || valueString.empty()) && value == -1)
-		{
-			std::cerr << RED << "Error: bad input => " << dateString << " | " << valueString << RESET << std::endl;
-			return ;
-		}
-		else if (!ymd.ok())
-		{
-			std::cerr << ORANGE << "Error: bad input => " << dateString << RESET << std::endl;
-			return ;
-		}
-		else if (value == -1)
-		{
-			std::cerr << CYAN << "Error: bad input => " << valueString << RESET << std::endl;
-			return ;
-		}
+		std::cerr << RED << "Error: bad input => " << line << RESET << std::endl;
+		return ;
+	}
+	if (!validateValue(value.value()))
+		return ;
 
-		if (!validateValue(value))
-			return ;
-		rate = getExchangeRate(ymd);
-		if (rate == -1)
-		{
-			std::cerr << BOLD << "Error: out of range => " << dateString << RESET << std::endl;
-			return ;
-		}
-		logData(ymd, value, rate);
-	}
-	catch(const std::exception& e)
+	rate = getExchangeRate(ymd);
+	if (rate == -1)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << "Error: out of range => " << dateString << std::endl;
+		return;
 	}
+	logData(ymd, value.value(), rate);
 }
-int	main(int argc, char **argv)
+
+int main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
 		std::cerr << RED << "Error: could not open file." << RESET << std::endl;
 		return (EXIT_FAILURE);
 	}
-	BitcoinExchange	exchange;
+	BitcoinExchange exchange;
 	if (!exchange.loadData("data.csv"))
 		return (1);
 	std::cerr << GREEN << "Data loaded successfully." << RESET << std::endl;

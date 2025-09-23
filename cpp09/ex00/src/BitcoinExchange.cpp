@@ -10,29 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.hpp"
+#include <cmath>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <regex>
-#include <cmath>
+#include <string>
+#include <ctime>
+
+#include "BitcoinExchange.hpp"
+#include <chrono>
 
 std::string_view BitcoinExchange::trim(std::string_view str)
 {
-	const char*	whitespace = " \t\r\n\f\v";
-	auto		start = str.find_first_not_of(whitespace);
-	auto		end = str.find_last_not_of(whitespace);
+	const char* whitespace = " \t\r\n\f\v";
+	auto start = str.find_first_not_of(whitespace);
+	auto end = str.find_last_not_of(whitespace);
 
 	if (start == std::string_view::npos)
 		return ("");
 	return str.substr(start, end - start + 1);
 }
-void BitcoinExchange::logData(const chrono& ymd, double value, double rate) const
+void BitcoinExchange::logData(const chrono& ymd, double value,
+								double rate) const
 {
-	std::cout<< static_cast<int>(ymd.year()) << "-" 
-			<< std::setw(2) << std::setfill('0') << static_cast<unsigned>(ymd.month()) << "-"
-			<< std::setw(2) << std::setfill('0') << static_cast<unsigned>(ymd.day())
-			<< " => " << value << " = ";
+	std::cout << static_cast<int>(ymd.year()) << "-" << std::setw(2)
+				<< std::setfill('0') << static_cast<unsigned>(ymd.month()) << "-"
+				<< std::setw(2) << std::setfill('0')
+				<< static_cast<unsigned>(ymd.day()) << " => " << value << " = ";
 
 	double result = value * rate;
 
@@ -49,7 +53,7 @@ void BitcoinExchange::logData(const chrono& ymd, double value, double rate) cons
 	std::cout << std::endl;
 }
 
-double	BitcoinExchange::getExchangeRate(const chrono& date) const
+double BitcoinExchange::getExchangeRate(const chrono& date) const
 {
 	auto it = exchangeData_.lower_bound(date);
 	if (it != exchangeData_.end() && it->first == date)
@@ -60,43 +64,45 @@ double	BitcoinExchange::getExchangeRate(const chrono& date) const
 	return (it->second);
 }
 
-chrono	BitcoinExchange::validateDate(const std::string& date)
+chrono BitcoinExchange::validateDate(const std::string& date)
 {
-	chrono	ymd;
-	int		year;
-	int		month;
-	int		day;
-
 	if (date.empty() || std::count(date.begin(), date.end(), '-') != 2)
+		return {};
+
+	chrono				ymd;
+	std::tm				tm{};
+	std::stringstream	ss(date);
+
+	ss >> std::get_time(&tm, "%Y-%m-%d");
+	if (ss.fail())
 		return {};
 	try
 	{
-		year = std::stoi(date.substr(0, date.find('-')));
-		month = std::stoi(date.substr(date.find('-') + 1, date.rfind('-')));
-		day = std::stoi(date.substr(date.rfind('-') + 1));
-		ymd = chrono{std::chrono::year{ year },
-				std::chrono::month{ static_cast<unsigned int>(month) },
-				std::chrono::day{ static_cast<unsigned int>(day) }};
+		ymd = chrono{std::chrono::year{ 1900 + tm.tm_year },
+		             std::chrono::month{ static_cast<unsigned int>(tm.tm_mon + 1) },
+		             std::chrono::day{ static_cast<unsigned int>(tm.tm_mday)} };
 		return (ymd);
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << RED << "Error validateDate: " << e.what() << RESET << std::endl;
+		std::cerr << RED << "Error validateDate: " << e.what() << RESET
+		          << std::endl;
 		return {};
 	}
 }
 
-double	BitcoinExchange::stringToDouble(const std::string& valueString)
+std::optional<double> BitcoinExchange::stringToDouble(const std::string& valueString)
 {
 	auto trimString = valueString;
 
 	trimString.erase(0, trimString.find_first_not_of(' '));
 	trimString.erase(trimString.find_last_not_of(' ') + 1);
 
-	static const std::regex floatRegex(R"(^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$)");
+	static const std::regex floatRegex(
+		R"(^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$)");
 
 	if (!std::regex_match(trimString, floatRegex))
-		return (-1);
+		return (std::nullopt);
 	try
 	{
 		return (std::stod(trimString));
@@ -105,14 +111,14 @@ double	BitcoinExchange::stringToDouble(const std::string& valueString)
 	{
 		std::cerr << RED << "Error: could not convert to number: " << trimString
 					<< " (" << e.what() << ")" << RESET << std::endl;
-		return (-1);
+		return (std::nullopt);
 	}
 }
 
-bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
+bool BitcoinExchange::loadData(const std::filesystem::path& filePath)
 {
-	std::ifstream	dataFile(filePath);
-	std::string		line;
+	std::ifstream dataFile(filePath);
+	std::string line;
 
 	if (!dataFile.is_open())
 	{
@@ -134,20 +140,19 @@ bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 	while (std::getline(dataFile, line))
 	{
 		if (line.empty() || line[0] == '#' || line == "date,exchange_rate")
-			continue ;
+			continue;
 		processDataFileLine(line);
 	}
 	dataFile.close();
 	return (true);
 }
 
-
-void	BitcoinExchange::processDataFileLine(const std::string& line)
+void BitcoinExchange::processDataFileLine(const std::string& line)
 {
-	chrono					ymd;
-	std::string				dateString;
-	std::string				valueString;
-	double					value;
+	chrono ymd;
+	std::string dateString;
+	std::string valueString;
+	std::optional<double> value;
 
 	dateString = line.substr(0, line.find(','));
 	valueString = line.substr(line.find(',') + 1);
@@ -156,21 +161,24 @@ void	BitcoinExchange::processDataFileLine(const std::string& line)
 		ymd = validateDate(dateString);
 		if (!ymd.ok() || ymd < minDate_ || ymd > maxDate_)
 		{
-			std::cerr << RED << "Error loadData: invalid date on line: " 
-						<< line << " with date: " << dateString << RESET << std::endl;
-			return ;
+			std::cerr << RED << "Error loadData: invalid date on line: " << line
+						<< " with date: " << dateString << RESET << std::endl;
+			return;
 		}
 		value = stringToDouble(valueString);
-		if (value == -1)
+		if (!value.has_value())
 		{
-			std::cerr << RED << "Error loadData: invalid value on line: " << line << " with value: " << valueString << RESET << std::endl;
+			std::cerr << RED
+						<< "Error loadData: invalid value on line: " << line
+						<< " with value: " << valueString << RESET << std::endl;
 			return ;
 		}
-		exchangeData_[ymd] = value;
+		exchangeData_[ymd] = value.value();
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << RED << "Error: bad input => " << line << " (" << e.what() << ")" << RESET << std::endl;
-		return ;
+		std::cerr << RED << "Error: bad input => " << line << " (" << e.what()
+					<< ")" << RESET << std::endl;
+		return;
 	}
 }
