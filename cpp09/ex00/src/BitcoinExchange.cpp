@@ -42,6 +42,7 @@ std::string_view BitcoinExchange::trim(std::string_view str)
 		return ("");
 	return str.substr(start, end - start + 1);
 }
+
 void BitcoinExchange::logData(const chrono& ymd, double value,
 								double rate) const
 {
@@ -78,7 +79,7 @@ double BitcoinExchange::getExchangeRate(const chrono& date) const
 
 chrono BitcoinExchange::validateDate(const std::string& date)
 {
-	if (date.empty() || std::count(date.begin(), date.end(), '-') != 2)
+	if (date.empty())
 		return {};
 
 	chrono				ymd;
@@ -86,30 +87,19 @@ chrono BitcoinExchange::validateDate(const std::string& date)
 	std::stringstream	ss(date);
 
 	ss >> std::get_time(&tm, "%Y-%m-%d");
-	if (ss.fail())
+	if (ss.fail() || !ss.eof())
 		return {};
-	try
-	{
-		ymd = chrono{std::chrono::year{ 1900 + tm.tm_year },
-						std::chrono::month{ static_cast<unsigned int>(tm.tm_mon + 1) },
-						std::chrono::day{ static_cast<unsigned int>(tm.tm_mday)} };
-		return (ymd);
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << RED << "Error validateDate: " << e.what() << RESET
-					<< std::endl;
-		return {};
-	}
+	ymd = chrono{std::chrono::year{ 1900 + tm.tm_year },
+					std::chrono::month{ static_cast<unsigned int>(tm.tm_mon + 1) },
+					std::chrono::day{ static_cast<unsigned int>(tm.tm_mday)} };
+	return (ymd);
 }
 
 std::optional<double> BitcoinExchange::stringToDouble(const std::string& valueString)
 {
 	auto trimString = valueString;
 
-	trimString.erase(0, trimString.find_first_not_of(' '));
-	trimString.erase(trimString.find_last_not_of(' ') + 1);
-
+	trim(trimString);
 	static const std::regex floatRegex(
 		R"(^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$)");
 
@@ -143,15 +133,10 @@ bool BitcoinExchange::loadData(const std::filesystem::path& filePath)
 		std::cerr << RED << "Error: empty file" << RESET << std::endl;
 		return (false);
 	}
-	line = trim(line);
-	if (line != "date,exchange_rate")
-	{
-		std::cerr << RED << "Error: invalid csv header" << RESET << std::endl;
-		return (false);
-	}
 	while (std::getline(dataFile, line))
 	{
-		if (line.empty() || line[0] == '#' || line == "date,exchange_rate")
+		line = trim(line);
+		if (line.empty() || line[0] == '#')
 			continue;
 		processDataFileLine(line);
 	}
@@ -168,29 +153,77 @@ void BitcoinExchange::processDataFileLine(const std::string& line)
 
 	dateString = line.substr(0, line.find(','));
 	valueString = line.substr(line.find(',') + 1);
-	try
+	ymd = validateDate(dateString);
+	if (!ymd.ok() || ymd < minDate_ || ymd > maxDate_)
 	{
-		ymd = validateDate(dateString);
-		if (!ymd.ok() || ymd < minDate_ || ymd > maxDate_)
-		{
-			std::cerr << RED << "Error loadData: invalid date on line: " << line
-						<< " with date: " << dateString << RESET << std::endl;
-			return;
-		}
-		value = stringToDouble(valueString);
-		if (!value.has_value())
-		{
-			std::cerr << RED
-						<< "Error loadData: invalid value on line: " << line
-						<< " with value: " << valueString << RESET << std::endl;
-			return ;
-		}
-		exchangeData_[ymd] = value.value();
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << RED << "Error: bad input => " << line << " (" << e.what()
-					<< ")" << RESET << std::endl;
+		std::cerr << RED << "Error loadData: invalid date on line: " << line
+					<< " with date: " << dateString << RESET << std::endl;
 		return;
 	}
+	value = stringToDouble(valueString);
+	if (!value.has_value())
+	{
+		std::cerr << RED
+					<< "Error loadData: invalid value on line: " << line
+					<< " with value: " << valueString << RESET << std::endl;
+		return ;
+	}
+	exchangeData_[ymd] = value.value();
+}
+
+bool BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
+{
+	std::ifstream	inputFile(filePath);
+	std::string		line;
+
+	if (!inputFile.is_open())
+	{
+		std::cerr << RED << "Error: could not open file" << RESET << std::endl;
+		return (false);
+	}
+
+	if (!std::getline(inputFile, line))
+	{
+		std::cerr << RED << "Error: empty file" << RESET << std::endl;
+		return (false);
+	}
+	while (std::getline(inputFile, line))
+	{
+		line = trim(line);
+		if (line.empty() || line[0] == '#')
+			continue;
+		processInputFileLine(line);
+	}
+	inputFile.close();
+	return (true);
+}
+
+void BitcoinExchange::processInputFileLine(const std::string& line)
+{
+	std::string				dateString;
+	std::string				valueString;
+	chrono					ymd;
+	std::optional<double>	value;
+	double					rate;
+
+	dateString = trim(line.substr(0, line.find('|')));
+	valueString = trim(line.substr(line.find('|') + 1));
+	ymd = validateDate(dateString);
+	value = stringToDouble(valueString);
+
+	if (valueString.empty() || !ymd.ok() || !value.has_value())
+	{
+		std::cerr << RED << "Error: bad input => " << line << RESET << std::endl;
+		return ;
+	}
+	if (!validateValue(value.value()))
+		return ;
+
+	rate = getExchangeRate(ymd);
+	if (rate == -1)
+	{
+		std::cerr << "Error: out of range => " << dateString << std::endl;
+		return;
+	}
+	logData(ymd, value.value(), rate);
 }
