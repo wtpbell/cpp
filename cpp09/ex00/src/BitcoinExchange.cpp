@@ -20,6 +20,18 @@
 #include "BitcoinExchange.hpp"
 #include <chrono>
 
+bool BitcoinExchange::validateValue(double value)
+{
+	if (value < 0)
+	{
+		std::cerr << YELLOW << "Error: not a positive number." << RESET
+		<< std::endl;
+	}
+	else if (value > 1000)
+		std::cerr << CYAN << "Error: too large a number." << RESET << std::endl;
+	return (value >= 0 && value <= 1000);
+}
+
 std::string_view BitcoinExchange::trim(std::string_view str)
 {
 	const char* whitespace = " \t\r\n\f\v";
@@ -79,14 +91,14 @@ chrono BitcoinExchange::validateDate(const std::string& date)
 	try
 	{
 		ymd = chrono{std::chrono::year{ 1900 + tm.tm_year },
-		             std::chrono::month{ static_cast<unsigned int>(tm.tm_mon + 1) },
-		             std::chrono::day{ static_cast<unsigned int>(tm.tm_mday)} };
+						std::chrono::month{ static_cast<unsigned int>(tm.tm_mon + 1) },
+						std::chrono::day{ static_cast<unsigned int>(tm.tm_mday)} };
 		return (ymd);
 	}
 	catch (std::exception& e)
 	{
 		std::cerr << RED << "Error validateDate: " << e.what() << RESET
-		          << std::endl;
+					<< std::endl;
 		return {};
 	}
 }
