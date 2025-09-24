@@ -20,7 +20,7 @@
 #include "BitcoinExchange.hpp"
 #include <chrono>
 
-bool BitcoinExchange::validateValue(double value)
+bool	BitcoinExchange::validateValue(double value)
 {
 	if (value < 0)
 	{
@@ -32,18 +32,24 @@ bool BitcoinExchange::validateValue(double value)
 	return (value >= 0 && value <= 1000);
 }
 
-std::string_view BitcoinExchange::trim(std::string_view str)
+void	BitcoinExchange::trim(std::string& str)
 {
 	const char* whitespace = " \t\r\n\f\v";
-	auto start = str.find_first_not_of(whitespace);
-	auto end = str.find_last_not_of(whitespace);
+	size_t start = str.find_first_not_of(whitespace);
+	size_t end = str.find_last_not_of(whitespace);
 
-	if (start == std::string_view::npos)
-		return ("");
-	return str.substr(start, end - start + 1);
+	if (start == std::string::npos)
+	{
+		str.clear();
+		return ;
+	}
+	if (end != std::string::npos && end + 1 < str.length())
+		str.erase(end + 1);
+	if (start > 0)
+		str.erase(0, start);
 }
 
-void BitcoinExchange::logData(const chrono& ymd, double value,
+void	BitcoinExchange::logData(const chrono& ymd, double value,
 								double rate) const
 {
 	std::cout << static_cast<int>(ymd.year()) << "-" << std::setw(2)
@@ -51,33 +57,27 @@ void BitcoinExchange::logData(const chrono& ymd, double value,
 				<< std::setw(2) << std::setfill('0')
 				<< static_cast<unsigned>(ymd.day()) << " => " << value << " = ";
 
-	double result = value * rate;
+	double				result = value * rate;
+	std::ostringstream	oss;
 
-	if (result == std::floor(result))
-		std::cout << static_cast<int>(result);
-	else
-	{
-		std::ostringstream oss;
-		oss << std::fixed << std::setprecision(2) << result;
-		std::string resultStr = oss.str();
-		resultStr.erase(resultStr.find_last_not_of('0') + 1, std::string::npos);
-		std::cout << resultStr;
-	}
+	result = std::round(result * 100.0) / 100.0;
+	oss << result;
+	std::cout << oss.str();
 	std::cout << std::endl;
 }
 
-double BitcoinExchange::getExchangeRate(const chrono& date) const
+std::optional<double>	BitcoinExchange::getExchangeRate(const chrono& date) const
 {
 	auto it = exchangeData_.lower_bound(date);
 	if (it != exchangeData_.end() && it->first == date)
 		return (it->second);
 	if (it == exchangeData_.begin())
-		return (-1);
+		return (std::nullopt);
 	--it;
 	return (it->second);
 }
 
-chrono BitcoinExchange::validateDate(const std::string& date)
+chrono	BitcoinExchange::validateDate(const std::string& date)
 {
 	if (date.empty())
 		return {};
@@ -95,7 +95,7 @@ chrono BitcoinExchange::validateDate(const std::string& date)
 	return (ymd);
 }
 
-std::optional<double> BitcoinExchange::stringToDouble(const std::string& valueString)
+std::optional<double>	BitcoinExchange::stringToDouble(const std::string& valueString)
 {
 	auto trimString = valueString;
 
@@ -117,10 +117,10 @@ std::optional<double> BitcoinExchange::stringToDouble(const std::string& valueSt
 	}
 }
 
-bool BitcoinExchange::loadData(const std::filesystem::path& filePath)
+bool	BitcoinExchange::loadData(const std::filesystem::path& filePath)
 {
-	std::ifstream dataFile(filePath);
-	std::string line;
+	std::ifstream	dataFile(filePath);
+	std::string		line;
 
 	if (!dataFile.is_open())
 	{
@@ -135,7 +135,7 @@ bool BitcoinExchange::loadData(const std::filesystem::path& filePath)
 	}
 	while (std::getline(dataFile, line))
 	{
-		line = trim(line);
+		trim(line);
 		if (line.empty() || line[0] == '#')
 			continue;
 		processDataFileLine(line);
@@ -144,12 +144,12 @@ bool BitcoinExchange::loadData(const std::filesystem::path& filePath)
 	return (true);
 }
 
-void BitcoinExchange::processDataFileLine(const std::string& line)
+void	BitcoinExchange::processDataFileLine(const std::string& line)
 {
-	chrono ymd;
-	std::string dateString;
-	std::string valueString;
-	std::optional<double> value;
+	chrono					ymd;
+	std::string				dateString;
+	std::string				valueString;
+	std::optional<double>	value;
 
 	dateString = line.substr(0, line.find(','));
 	valueString = line.substr(line.find(',') + 1);
@@ -171,7 +171,7 @@ void BitcoinExchange::processDataFileLine(const std::string& line)
 	exchangeData_[ymd] = value.value();
 }
 
-bool BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
+bool	BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 {
 	std::ifstream	inputFile(filePath);
 	std::string		line;
@@ -189,7 +189,7 @@ bool BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 	}
 	while (std::getline(inputFile, line))
 	{
-		line = trim(line);
+		trim(line);
 		if (line.empty() || line[0] == '#')
 			continue;
 		processInputFileLine(line);
@@ -198,20 +198,36 @@ bool BitcoinExchange::exchangeData(const std::filesystem::path& filePath)
 	return (true);
 }
 
-void BitcoinExchange::processInputFileLine(const std::string& line)
+void	BitcoinExchange::processInputFileLine(const std::string& line)
 {
 	std::string				dateString;
 	std::string				valueString;
 	chrono					ymd;
 	std::optional<double>	value;
-	double					rate;
+	std::optional<double>	rate;
+	size_t					separatorPos;
 
-	dateString = trim(line.substr(0, line.find('|')));
-	valueString = trim(line.substr(line.find('|') + 1));
+	separatorPos = line.find('|');
+	if (separatorPos == std::string::npos)
+	{
+		std::cerr << RED << "Error: bad input (missing '|' separator) => " << line << RESET << std::endl;
+		return ;
+	}
+	dateString = line.substr(0, separatorPos);
+	valueString = line.substr(separatorPos + 1);
+	trim(dateString);
+	trim(valueString);
+	
+	if (dateString.empty() || valueString.empty())
+	{
+		std::cerr << RED << "Error: bad input (empty date or value) => " << line << RESET << std::endl;
+		return ;
+	}
+
 	ymd = validateDate(dateString);
 	value = stringToDouble(valueString);
 
-	if (valueString.empty() || !ymd.ok() || !value.has_value())
+	if (!ymd.ok() || !value.has_value())
 	{
 		std::cerr << RED << "Error: bad input => " << line << RESET << std::endl;
 		return ;
@@ -220,10 +236,10 @@ void BitcoinExchange::processInputFileLine(const std::string& line)
 		return ;
 
 	rate = getExchangeRate(ymd);
-	if (rate == -1)
+	if (!rate.has_value())
 	{
 		std::cerr << "Error: out of range => " << dateString << std::endl;
 		return;
 	}
-	logData(ymd, value.value(), rate);
+	logData(ymd, value.value(), rate.value());
 }
