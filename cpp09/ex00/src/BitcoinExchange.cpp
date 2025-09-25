@@ -34,9 +34,9 @@ bool	BitcoinExchange::validateValue(double value)
 
 void	BitcoinExchange::trim(std::string& str)
 {
-	const char* whitespace = " \t\r\n\f\v";
-	size_t start = str.find_first_not_of(whitespace);
-	size_t end = str.find_last_not_of(whitespace);
+	const char*	whitespace = " \t\r\n\f\v";
+	size_t		start = str.find_first_not_of(whitespace);
+	size_t		end = str.find_last_not_of(whitespace);
 
 	if (start == std::string::npos)
 	{
