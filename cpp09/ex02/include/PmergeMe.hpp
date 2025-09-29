@@ -16,6 +16,11 @@
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <string>
+
+using Sequence = std::vector<int>;
+using Pair = std::pair<Sequence, Sequence>;
+
 
 class	PmergeMe
 {
@@ -28,9 +33,25 @@ class	PmergeMe
 		PmergeMe(PmergeMe&& other) noexcept = default;
 		PmergeMe& operator=(PmergeMe&& other) noexcept = default;
 
-		static int	mergeSort(std::vector<int>& vec);
+		static int	mergeSort(Sequence& vec);
 		static int	mergeSort(std::list<int>& lst);
 		int			jacobsthalNum(size_t n);
+		void		swapPair(Pair& v);
+		bool		isAllDigits(std::string_view str);
+		Sequence	handleVector(int size, char** argv);
+		Pair		makePairs(const Sequence& v, size_t pairLevel,
+						Sequence& odd, Sequence& stray);
+		size_t		binarySearch(const Sequence& v, int target,
+						size_t left, size_t right);
+		void		flattenPairs(Sequence& v, const std::vector<Pair>& pairs, const Sequence& odd, const Sequence& stray);
+		void		buildMainPend(const Sequence& v, std::vector<Sequence>& main,
+					std::vector<Sequence>& pend);
+		void		jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend);
+		void		mergeInsertionSort(Sequence& v, size_t pairLevel);
+		void		flattenMain(Sequence& v, const std::vector<Sequence>& main);
+		void		insertOddNStray(std::vector<Sequence>& main, const Sequence& odd, const Sequence& stray);
+		void		splitMainPend(const Pair& pairs, Sequence& main, Sequence& pend);
+
 
 	private:
 		
