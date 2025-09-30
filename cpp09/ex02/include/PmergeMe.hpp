@@ -39,6 +39,12 @@ class	PmergeMe
 		void				swapPair(Pair& v);
 		bool				isAllDigits(std::string_view str);
 		Sequence			handleVector(int size, char** argv);
+		Pair				splitAndOrderChunk(Sequence::const_iterator start, size_t pairLevel);
+		void				moveChunk(const Sequence::const_iterator start, const Sequence::const_iterator end,
+									Sequence& target);
+		void				moveChunk(const Sequence::const_iterator start,
+									const Sequence::const_iterator end,
+									std::vector<Sequence>& target);
 		std::vector<Pair>	makePairs(const Sequence& v, size_t pairLevel,
 									Sequence& odd, Sequence& stray, size_t& comparison_nbr);
 		size_t				binarySearch(const Sequence& v, int target,
@@ -46,7 +52,7 @@ class	PmergeMe
 		void				flattenPairs(Sequence& v, std::vector<Pair>& pairs,
 									Sequence& odd, Sequence& stray);
 		void				buildMainPend(const Sequence& v, std::vector<Sequence>& main,
-									std::vector<Sequence>& pend);
+									std::vector<Sequence>& pend, size_t pairLevel);
 		void				jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
 									size_t& comparison_nbr);
 		void				mergeInsertionSort(Sequence& v, size_t pairLevel);
