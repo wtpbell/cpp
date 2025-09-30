@@ -21,6 +21,21 @@
 using Sequence = std::vector<int>;
 using Pair = std::pair<Sequence, Sequence>;
 
+struct PairingInfo
+{
+	size_t	pairChunk;
+	bool	isOdd;
+	size_t	offset;
+	size_t	end;
+
+	PairingInfo(size_t totalSize, size_t pairLevel)
+	{
+		pairChunk = totalSize / pairLevel;
+		isOdd = (pairChunk % 2 == 1);
+		offset = 2 * pairLevel;
+		end = pairLevel * pairChunk - (isOdd ? pairLevel : 0);
+	}
+};
 
 class	PmergeMe
 {
@@ -52,7 +67,7 @@ class	PmergeMe
 		void				flattenPairs(Sequence& v, std::vector<Pair>& pairs,
 									Sequence& odd, Sequence& stray);
 		void				buildMainPend(const Sequence& v, std::vector<Sequence>& main,
-									std::vector<Sequence>& pend, size_t pairLevel);
+									std::vector<Sequence>& pend, Sequence& stray, size_t pairLevel);
 		void				jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
 									size_t& comparison_nbr);
 		void				mergeInsertionSort(Sequence& v, size_t pairLevel);

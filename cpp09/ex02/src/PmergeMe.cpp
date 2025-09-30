@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/09/25 11:49:52 by bewong        #+#    #+#                 */
-/*   Updated: 2025/09/30 16:55:07 by bewong        ########   odam.nl         */
+/*   Updated: 2025/09/30 18:30:23 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,35 +109,26 @@ void	PmergeMe::moveChunk(const Sequence::const_iterator start,
 	target.push_back(std::move(chunk));
 }
 
-
 std::vector<Pair>	PmergeMe::makePairs(const Sequence& c, size_t pairLevel,
 					Sequence& odd, Sequence& stray, size_t& comparison_nbr)
 {
-	size_t				pairChunk;
-	bool				isOdd;
-	size_t				offset;
 	std::vector<Pair>	pairs;
-	size_t				end;
 
-	pairChunk = c.size() / pairLevel;
-	isOdd = (pairChunk % 2 == 1);
-	offset = 2 * pairLevel;
-	end = pairLevel * pairChunk - (isOdd ? pairLevel : 0);
-	
-	for(size_t i = 0; i < end; i += offset)
+	PairingInfo info(c.size(), pairLevel);
+	for (size_t i = 0; i < info.end; i += info.offset)
 	{
 		auto [seq_one, seq_two] = splitAndOrderChunk(c.begin() + i, pairLevel);
 		pairs.emplace_back(std::move(seq_one), std::move(seq_two));
 		comparison_nbr++;
 	}
-	if (isOdd)
+	if (info.isOdd)
 	{
-		moveChunk(c.begin() + end, std::next(c.begin() + end, pairLevel), odd);
-		end += pairLevel;
+		moveChunk(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), odd);
+		info.end += pairLevel;
 	}
 
-	if (end < c.size())
-		moveChunk(c.begin() + end, c.end(), stray);
+	if (info.end < c.size())
+		moveChunk(c.begin() + info.end, c.end(), stray);
 	return (pairs);
 }
 
@@ -164,21 +155,31 @@ void	PmergeMe::flattenPairs(Sequence& c, std::vector<Pair>& pairs,
 }
 
 void	PmergeMe::buildMainPend(const Sequence& c, std::vector<Sequence>& main,
-					std::vector<Sequence>& pend, size_t pairLevel)
+					std::vector<Sequence>& pend, Sequence& stray, size_t pairLevel)
 {
-	size_t				pairChunk;
-	bool				isOdd;
-	size_t				offset;
 	std::vector<Pair>	pairs;
-	size_t				end;
-
-	pairChunk = c.size() / pairLevel;
-	isOdd = (pairChunk % 2 == 1);
-	offset = 2 * pairLevel;
-	end = pairLevel * pairChunk - (isOdd ? pairLevel : 0);
-
-	(void) pend;
-	(void) main;
+	
+	PairingInfo info(c.size(), pairLevel);
+	for (size_t i = 0; i < info.end; i++)
+	{
+		auto [seq_one, seq_two] = splitAndOrderChunk(c.begin() + i, pairLevel);
+		if (main.empty())
+		{
+			main.emplace_back(std::move(seq_one));
+			main.emplace_back(std::move(seq_two));
+		}
+		else
+		{
+			main.emplace_back(std::move(seq_two));
+			pend.emplace_back(std::move(seq_one));
+		}
+	}
+	if (info.isOdd)
+	{
+		moveChunk(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), stray);
+		info.end += pairLevel;
+	}
+			
 }
 
 // void	PmergeMe::jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
@@ -230,7 +231,7 @@ void	PmergeMe::mergeInsertionSort(Sequence& c, size_t pairLevel)
 	auto pairs = makePairs(c, pairLevel, odd, stray, comparison_nbr);
 	flattenPairs(c, pairs, odd, stray);
 	mergeInsertionSort(c, pairLevel * 2);
-	buildMainPend(c, main, pend, pairLevel);
+	buildMainPend(c, main, pend, stray, pairLevel);
 	// jacobsthalInsert(main, pend, comparison_nbr);
 	// insertOddNStray(main, odd, stray, comparison_nbr);
 	// flattenMain(c, main);
