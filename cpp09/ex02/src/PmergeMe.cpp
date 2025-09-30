@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/09/25 11:49:52 by bewong        #+#    #+#                 */
-/*   Updated: 2025/09/29 18:07:16 by bewong        ########   odam.nl         */
+/*   Updated: 2025/09/30 15:43:53 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,10 @@
 #include <cmath>
 #include <iostream>
 
+
 int	PmergeMe::jacobsthalNum(size_t n)
 {
 	return ((std::pow(2, n) - std::pow(-1, n)) / 3);
-}
-
-void	PmergeMe::swapPair(Pair& v)
-{
-	for (auto& [first, second] : v)
-		if (first > second)
-			std::swap(first, second);
-	// std::cout << "After: ";
-	// for (const auto& pair : v)
-	// 	std::cout << "(" << pair << ", " << pair.second << ") ";
-	// std::cout << std::endl;
 }
 
 bool	PmergeMe::isAllDigits(std::string_view str)
@@ -37,7 +27,7 @@ bool	PmergeMe::isAllDigits(std::string_view str)
 
 Sequence	PmergeMe::handleVector(int size, char** argv)
 {
-	Sequence	v;
+	Sequence	c;
 	int					value;
 
 	for (int i = 1; i < size; i++)
@@ -49,7 +39,7 @@ Sequence	PmergeMe::handleVector(int size, char** argv)
 			if (!isAllDigits(argv[i]))
 				throw std::invalid_argument("argument must be a number");
 			value = std::stoi(argv[i]);
-			v.emplace_back(value);
+			c.emplace_back(std::move(value));
 		}
 		catch (std::invalid_argument const& e)
 		{
@@ -62,59 +52,130 @@ Sequence	PmergeMe::handleVector(int size, char** argv)
 			throw ;
 		}
 	}
-	for (int n : v)
-		std::cout << n << std::endl;
-	return (v);
+	return (c);
 }
 
-Pair	PmergeMe::makePairs(const Sequence& v, size_t pairLevel,
-					Sequence& odd, Sequence& stray)
+void printSequence(const Sequence& seq)
 {
+	std::cout << "printSequence: ";
+	std::cout << "[";
+	for (auto it = seq.begin(); it != seq.end(); ++it)
+	{
+		if (it != seq.begin()) std::cout << " ";
+		std::cout << *it;
+	}
+	std::cout << "]";
+}
 
-	std::cout << "Before:";
-	for (auto num : v)
-		std::cout << " " << num;
+
+void printPairs(const std::vector<Pair>& pairs)
+{
+	for (size_t idx = 0; idx < pairs.size(); ++idx)
+	{
+		std::cout << "Pair " << idx << ": ";
+		printSequence(pairs[idx].first);
+		std::cout << " , ";
+		printSequence(pairs[idx].second);
+		std::cout << std::endl;
+	}
+}
+
+std::vector<Pair>	PmergeMe::makePairs(const Sequence& c, size_t pairLevel,
+					Sequence& odd, Sequence& stray, size_t& comparison_nbr)
+{
+	size_t				pairChunk;
+	bool				isOdd;
+	size_t				offset;
+	std::vector<Pair>	pairs;
+	size_t				end;
+
+	pairChunk = c.size() / pairLevel;
+	isOdd = (pairChunk % 2 == 1);
+	offset = 2 * pairLevel;
+	end = pairLevel * pairChunk - (isOdd ? pairLevel : 0);
+	
+	for(size_t i = 0; i < end; i += offset)
+	{
+		Sequence	seq_one(c.begin() + i, c.begin() + i + pairLevel);
+		Sequence	seq_two(c.begin() + pairLevel + i, c.begin() + i + 2 * pairLevel);
+
+		if (seq_one.back() > seq_two.back())
+		{
+			comparison_nbr++;
+			std::swap(seq_one, seq_two);
+		}
+		pairs.emplace_back(std::move(seq_one), std::move(seq_two));
+	}
+	if (isOdd)
+	{
+		size_t	start;
+
+		start = end;
+		for (size_t j = 0; j < pairLevel && start + j < c.size(); j++)
+			odd.emplace_back(std::move(c[start + j]));
+		end += pairLevel;
+	}
+	for (size_t i = end; i < c.size(); i++)
+		stray.emplace_back(std::move(c[i]));
+	return (pairs);
+}
+
+// copy: allocate new memory for new v, then copies each element O(n)
+// move: just copies the internal pointer and size/capacity, no element copies O(1)
+// std::make_move_iterator(for range): when dereferncing it(*it), it gives an rvalue (T&&) instead of t&
+void	PmergeMe::flattenPairs(Sequence& c, std::vector<Pair>& pairs,
+			Sequence& odd, Sequence& stray)
+{
+	printPairs(pairs);
+	c.clear();
+	c.reserve(pairs.size() * 2 * (pairs[0].first.size()) + odd.size() + stray.size());
+	for (auto& pair : pairs)
+	{
+		c.insert(c.end(), std::make_move_iterator(pair.first.begin()), std::make_move_iterator(pair.first.end()));
+		c.insert(c.end(), std::make_move_iterator(pair.second.begin()), std::make_move_iterator(pair.second.end()));
+	}
+	c.insert(c.end(), std::make_move_iterator(odd.begin()), std::make_move_iterator(odd.end()));
+	c.insert(c.end(), std::make_move_iterator(stray.begin()), std::make_move_iterator(stray.end()));
+	
+	for (auto i : c)
+		std::cout << " " << i;
 	std::cout << std::endl;
 }
 
-void	PmergeMe::flattenPairs(Sequence& v, const std::vector<Pair>& pairs,
-								const Sequence& odd, const Sequence& stray)
-{
+// void	PmergeMe::buildMainPend(const Sequence& c, std::vector<Sequence>& main,
+// 					std::vector<Sequence>& pend)
+// {
 	
-}
+// }
 
-void	PmergeMe::buildMainPend(const Sequence& v, std::vector<Sequence>& main,
-					std::vector<Sequence>& pend)
-{
+
+
+// void	PmergeMe::jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
+// 					size_t& comparison_nbr)
+// {
 	
-}
+// }
 
-
-
-void	PmergeMe::jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend)
-{
+// void	PmergeMe::insertOddNStray(std::vector<Sequence>& main, const Sequence& odd,
+// 					const Sequence& stray, size_t& comparison_nbr)
+// {
 	
-}
+// }
 
-void	PmergeMe::insertOddNStray(std::vector<Sequence>& main, const Sequence& odd, const Sequence& stray)
-{
+// void	PmergeMe::flattenMain(Sequence& c, const std::vector<Sequence>& main)
+// {
 	
-}
+// }
 
-void	PmergeMe::flattenMain(Sequence& v, const std::vector<Sequence>& main)
-{
-	
-}
-
-size_t	PmergeMe::binarySearch(const Sequence& v, int target,
+size_t	PmergeMe::binarySearch(const Sequence& c, int target,
 			size_t left, size_t right)
 {
 	while (left < right)
 	{
 		size_t mid = left + (right - left) / 2;
-		if (v[mid] == target)
+		if (c[mid] == target)
 			return (mid);
-		if (v[mid] < target)
+		if (c[mid] < target)
 			left = mid + 1;
 		else
 			right = mid;
@@ -122,14 +183,24 @@ size_t	PmergeMe::binarySearch(const Sequence& v, int target,
 	return (left);
 }
 
-void	PmergeMe::mergeInsertionSort(Sequence& v, size_t pairLevel)
+void	PmergeMe::mergeInsertionSort(Sequence& c, size_t pairLevel)
 {
-	size_t		pairChunk;
-	Sequence	odd;
-	Sequence	stray;
+	size_t					pairChunk;
+	size_t					comparison_nbr;
+	Sequence				odd;
+	Sequence				stray;
+	// std::vector<Sequence>	main;
+	// std::vector<Sequence>	pend;
 
-	pairChunk = v.size() / pairLevel;
+	pairChunk = c.size() / pairLevel;
 	if (pairChunk < 2)
 		return ;
-	auto pairs = makePairs(v, pairLevel, odd, stray);
+	comparison_nbr = 0;
+	auto pairs = makePairs(c, pairLevel, odd, stray, comparison_nbr);
+	flattenPairs(c, pairs, odd, stray);
+	mergeInsertionSort(c, pairLevel * 2);
+	// buildMainPend(c, main, pend);
+	// jacobsthalInsert(main, pend, comparison_nbr);
+	// insertOddNStray(main, odd, stray, comparison_nbr);
+	// flattenMain(c, main);
 }
