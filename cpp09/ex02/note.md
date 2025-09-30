@@ -10,6 +10,7 @@ int x = 42;
 v.push_back(x);            // copies x
 v.push_back(std::move(x)); // moves x
 
+```
 ## 2. `emplace_back`
 👉 **Use when you want to construct the object directly inside the container.** you want to insert.
 
@@ -24,7 +25,7 @@ pairs.push_back({seq_one, seq_two});   // ✅ works
 pairs.emplace_back({seq_one, seq_two}); // ❌ doesn’t compile
 pairs.emplace_back(seq_one, seq_two);   // ✅ works
 
-
+```
 ## 3. `std::move`
 👉 **Use when you no longer need the variable.**
 
