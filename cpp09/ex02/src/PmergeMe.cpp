@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/09/25 11:49:52 by bewong        #+#    #+#                 */
-/*   Updated: 2025/09/30 18:30:23 by bewong        ########   odam.nl         */
+/*   Updated: 2025/10/02 13:39:35 by bewong        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 #include <cmath>
 #include <iostream>
 
-
 int	PmergeMe::jacobsthalNum(size_t n)
 {
-	return ((std::pow(2, n) - std::pow(-1, n)) / 3);
+	return ( (1ULL << n) + ((n % 2 == 0) ? 1 : -1) ) / 3;
 }
 
 bool	PmergeMe::isAllDigits(std::string_view str)
@@ -91,7 +90,7 @@ Pair PmergeMe::splitAndOrderChunk(Sequence::const_iterator start, size_t pairLev
 	return {std::move(seq_one), std::move(seq_two)};
 }
 
-void	PmergeMe::moveChunk(const Sequence::const_iterator start,
+void	PmergeMe::moveBatch(const Sequence::const_iterator start,
 							const Sequence::const_iterator end,
 							Sequence& target)
 {
@@ -99,14 +98,14 @@ void	PmergeMe::moveChunk(const Sequence::const_iterator start,
 		target.push_back(std::move(*it));
 }
 
-void	PmergeMe::moveChunk(const Sequence::const_iterator start,
+void	PmergeMe::moveBatch(const Sequence::const_iterator start,
 						const Sequence::const_iterator end,
 						std::vector<Sequence>& target)
 {
 	if (start == end)
 		return;
-	Sequence chunk(start, end);
-	target.push_back(std::move(chunk));
+	Sequence batch(start, end);
+	target.push_back(std::move(batch));
 }
 
 std::vector<Pair>	PmergeMe::makePairs(const Sequence& c, size_t pairLevel,
@@ -123,12 +122,12 @@ std::vector<Pair>	PmergeMe::makePairs(const Sequence& c, size_t pairLevel,
 	}
 	if (info.isOdd)
 	{
-		moveChunk(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), odd);
+		moveBatch(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), odd);
 		info.end += pairLevel;
 	}
 
 	if (info.end < c.size())
-		moveChunk(c.begin() + info.end, c.end(), stray);
+		moveBatch(c.begin() + info.end, c.end(), stray);
 	return (pairs);
 }
 
@@ -176,17 +175,44 @@ void	PmergeMe::buildMainPend(const Sequence& c, std::vector<Sequence>& main,
 	}
 	if (info.isOdd)
 	{
-		moveChunk(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), stray);
+		moveBatch(c.begin() + info.end, std::next(c.begin() + info.end, pairLevel), stray);
 		info.end += pairLevel;
 	}
-			
+	if (info.end < c.size())
+		moveBatch(c.begin() + info.end, c.end(), stray);
 }
 
-// void	PmergeMe::jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
-// 					size_t& comparison_nbr)
-// {
+void	PmergeMe::jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
+					size_t& comparison_nbr)
+{
+	size_t	prevJ;
+	size_t	currJ;
+	size_t	batchSize;
+	size_t	insertedCount;
 	
-// }
+	if (pend.empty())
+		return ;
+	prevJ = jacobsthalNum(1);
+	insertedCount = 0;
+	
+	for (size_t i = 2; ; i++)
+	{
+		currJ = jacobsthalNum(i);
+		batchSize = currJ - prevJ;
+
+		if (batchSize > pend.size())
+			break ;
+		
+		auto	batchEnd = pend.begin();
+		std::advance(batchEnd, batchSize); // start from pend.begin(), advance batchSize steps
+		
+		for (size_t j = 0; j < batchSize; j++)
+		{
+			auto curr = std::prev(batchEnd, j + 1);
+			
+		}
+	}
+}
 
 // void	PmergeMe::insertOddNStray(std::vector<Sequence>& main, const Sequence& odd,
 // 					const Sequence& stray, size_t& comparison_nbr)
@@ -232,7 +258,7 @@ void	PmergeMe::mergeInsertionSort(Sequence& c, size_t pairLevel)
 	flattenPairs(c, pairs, odd, stray);
 	mergeInsertionSort(c, pairLevel * 2);
 	buildMainPend(c, main, pend, stray, pairLevel);
-	// jacobsthalInsert(main, pend, comparison_nbr);
+	jacobsthalInsert(main, pend, comparison_nbr);
 	// insertOddNStray(main, odd, stray, comparison_nbr);
 	// flattenMain(c, main);
 }

@@ -55,9 +55,9 @@ class	PmergeMe
 		bool				isAllDigits(std::string_view str);
 		Sequence			handleVector(int size, char** argv);
 		Pair				splitAndOrderChunk(Sequence::const_iterator start, size_t pairLevel);
-		void				moveChunk(const Sequence::const_iterator start, const Sequence::const_iterator end,
+		void				moveBatch(const Sequence::const_iterator start, const Sequence::const_iterator end,
 									Sequence& target);
-		void				moveChunk(const Sequence::const_iterator start,
+		void				moveBatch(const Sequence::const_iterator start,
 									const Sequence::const_iterator end,
 									std::vector<Sequence>& target);
 		std::vector<Pair>	makePairs(const Sequence& v, size_t pairLevel,
