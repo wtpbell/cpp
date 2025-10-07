@@ -13,6 +13,7 @@
 #ifndef PMERGEME_HPP
 # define PMERGEME_HPP
 
+#include "MergeInsertionTracer.hpp"
 #include <vector>
 #include <list>
 #include <algorithm>
@@ -48,12 +49,10 @@ class	PmergeMe
 		PmergeMe(PmergeMe&& other) noexcept = default;
 		PmergeMe& operator=(PmergeMe&& other) noexcept = default;
 
-		static int			mergeSort(Sequence& vec);
-		static int			mergeSort(std::list<int>& lst);
 		int					jacobsthalNum(size_t n);
-		void				swapPair(Pair& v);
 		bool				isAllDigits(std::string_view str);
 		Sequence			handleVector(int size, char** argv);
+		std::vector<size_t>	jacobsthalOrderFor(size_t m);
 		Pair				splitAndOrderChunk(Sequence::const_iterator start, size_t pairLevel);
 		void				moveBatch(const Sequence::const_iterator start, const Sequence::const_iterator end,
 									Sequence& target);
@@ -62,15 +61,12 @@ class	PmergeMe
 									std::vector<Sequence>& target);
 		std::vector<Pair>	makePairs(const Sequence& v, size_t pairLevel,
 									Sequence& odd, Sequence& stray, size_t& comparison_nbr);
-		size_t				binarySearch(const Sequence& v, int target,
-									size_t left, size_t right);
-		void				flattenPairs(Sequence& v, std::vector<Pair>& pairs,
-									Sequence& odd, Sequence& stray);
+		void				flattenPairs(Sequence& v, std::vector<Pair>& pairs);
 		void				buildMainPend(const Sequence& v, std::vector<Sequence>& main,
 									std::vector<Sequence>& pend, Sequence& stray, size_t pairLevel);
 		void				jacobsthalInsert(std::vector<Sequence>& main, std::vector<Sequence>& pend,
 									size_t& comparison_nbr);
-		void				mergeInsertionSort(Sequence& v, size_t pairLevel);
+		void				mergeInsertionSort(Sequence& c, size_t pairLevel, MergeInsertionTracer& tracer);
 		void				flattenMain(Sequence& v, const std::vector<Sequence>& main);
 		void				insertOddNStray(std::vector<Sequence>& main, const Sequence& odd,
 									const Sequence& stray, size_t& comparison_nbr);
