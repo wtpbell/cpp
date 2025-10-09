@@ -21,7 +21,7 @@ CPPFLAGS			= -Wextra -Wall -Werror   $(INC) -fsanitize=address
 RM					= rm -f
 DFLAGS				= -MMD -MP
 
-SRC					= main.cpp PmergeMe.cpp
+SRC					= main.cpp PmergeMe.cpp 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(SRC))
 OBJS				= $(patsubst $(SRCS_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)
@@ -31,6 +31,9 @@ start:
 					@make all
 
 all: 				$(OBJS_DIR) $(NAME)
+
+debug: 				CPPFLAGS += -DDEBUG=true -g
+debug: 				all
 
 $(NAME): 			$(OBJS)
 					@echo "$(CYAN) ◎ Linking → $(MAGENTA)$@$(DEF_COLOR)"
@@ -45,6 +48,7 @@ $(OBJS_DIR)/%.o:	$(SRCS_DIR)/%.cpp
 					@mkdir -p $(@D)
 					@$(CPP) $(CPPFLAGS) $(DFLAGS) -c $< -o $@
 					@echo "$(GREEN) ◎ Object file $(notdir $@) created successfully! ✓$(DEF_COLOR)"
+
 
 -include $(DEPS)
 

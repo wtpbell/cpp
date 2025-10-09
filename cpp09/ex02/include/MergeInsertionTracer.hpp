@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   MergeInsertionTracer.hpp                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bewong <bewong@student.codam.nl>             +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/10/07 15:19:05 by bewong        #+#    #+#                 */
-/*   Updated: 2025/10/07 16:14:37 by bewong        ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   MergeInsertionTracer.hpp                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 15:19:05 by bewong            #+#    #+#             */
+/*   Updated: 2025/10/09 20:57:44 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,121 +15,124 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <list>
 
 class MergeInsertionTracer
 {
 	public:
 		bool debug;
 
-		MergeInsertionTracer(bool enabled = true) : debug(enabled) {}
+		explicit MergeInsertionTracer(bool enabled = true) : debug(enabled) {}
 
-		// ---- Sequence printing ----
 		template<typename T>
-		void printSequence(const std::vector<T>& seq, bool newline = true) const
+		void printSequence(const std::vector<T>& seq, const std::string& prefix = "", bool newline = true) const
 		{
-			if (!debug)
-				return;
-			std::cout << "printSequence: [";
+			if (!debug) return;
+			if (!prefix.empty())
+				std::cout << prefix << " ";
+			std::cout << "(size: " << seq.size() << "): [";
 			for (size_t i = 0; i < seq.size(); ++i)
-				std::cout << seq[i] << (i + 1 < seq.size() ? " " : "");
+			{
+				std::cout << seq[i];
+				if (i + 1 < seq.size())
+					std::cout << " ";
+			}
 			std::cout << "]";
 			if (newline)
 				std::cout << std::endl;
 		}
 
-		// ---- High-level trace ----
 		template<typename T>
-		void before(const std::vector<T>& seq) const
+		void levelStart(size_t pairLevel, const std::vector<T>& seq) const
 		{
-			if (!debug)
-				return;
-			std::cout << "Before: ";
-			printSequence(seq);
-			std::cout << std::endl;
+			if (!debug) return;
+			std::cout << "\n=== Level " << pairLevel << " ===" << std::endl;
+			printSequence(seq, "Current sequence", true);
 		}
 
-		template<typename T>
-		void after(const std::vector<T>& seq) const
+		void levelFinal(const std::vector<int>& seq) const
 		{
-			if (!debug)
-				return;
-			std::cout << "After: ";
-			printSequence(seq);
-			std::cout << std::endl;
+			if (!debug) return;
+			std::cout << "\n=== Final sequence at base case ===" << std::endl;
+			printSequence(seq, "Sequence");
+			std::cout << "Size: " << seq.size() << " elements\n";
 		}
 
-		template<typename T>
-		void pair(size_t index, const std::vector<T>& seq1, const std::vector<T>& seq2) const
+		void levelOddStray(const std::vector<int>& odd, const std::vector<int>& stray) const
 		{
-			if (!debug)
-				return;
-			std::cout << "Pair " << index << ": ";
-			printSequence(seq1, false);
-			std::cout << " , ";
-			printSequence(seq2);
+			if (!debug) return;
+			if (!odd.empty())
+				printSequence(odd, "Found odd elements");
+			else
+				std::cout << "No odd elements found at this level\n";
+
+			if (!stray.empty())
+				printSequence(stray, "Found stray elements");
+			else
+				std::cout << "No stray elements found at this level\n";
 		}
 
-		template<typename T>
-		void buildMainPend(size_t pairLevel, const std::vector<T>& seq) const
+		void levelPairs(const std::vector<std::pair<std::vector<int>, std::vector<int>>>& pairs) const
 		{
-			if (!debug)
-				return;
-			std::cout << "\nbuildMainPend called with pairLevel=" << pairLevel << ", sequence: ";
-			printSequence(seq);
+			if (!debug) return;
+			std::cout << "\nPairs:\n";
+			for (size_t i = 0; i < pairs.size(); ++i)
+			{
+				std::cout << "Pair " << i << ": ";
+				printSequence(pairs[i].first, "", false);
+				std::cout << " , ";
+				printSequence(pairs[i].second);
+			}
 		}
 
-		template<typename T>
-		void showMainPend(const std::vector<std::vector<T>>& main,
-						const std::vector<std::vector<T>>& pend) const
+		void mainPendStart(size_t pairLevel, const std::vector<int>& c) const
 		{
-			if (!debug)
-				return;
-			std::cout << "\nAfter buildMainPend:\n";
-			std::cout << "Main (" << main.size() << "):\n";
+			if (!debug) return;
+			std::cout << "\n=== Building Main/Pend ===\n";
+			std::cout << "Pair Level: " << pairLevel << "\n";
+			printSequence(c, "Current sequence");
+		}
+
+		void showMainPend(const std::vector<std::vector<int>>& main,
+						const std::vector<std::vector<int>>& pend) const
+		{
+			if (!debug) return;
+			std::cout << "\nMain (" << main.size() << "):\n";
 			for (size_t i = 0; i < main.size(); ++i)
 			{
 				std::cout << "  [" << i << "] ";
-				printSequence(main[i]);
+				printSequence(main[i], "", false);
+				std::cout << std::endl;
 			}
 			std::cout << "Pend (" << pend.size() << "):\n";
 			for (size_t i = 0; i < pend.size(); ++i)
 			{
 				std::cout << "  [" << i << "] ";
-				printSequence(pend[i]);
-			}
-		}
-
-		void	originalInput(std::vector<int> vect)
-		{
-			std::cout << "\nInput: ";
-			for (auto n : vect) std::cout << n << " ";
+				printSequence(pend[i], "", false);
 				std::cout << std::endl;
+			}
 		}
 
 		void jacobsthalOrder(const std::vector<size_t>& order) const
 		{
-			if (!debug) 
-				return;
+			if (!debug) return;
 			std::cout << "Jacobsthal order: ";
 			for (size_t i = 0; i < order.size(); ++i)
 				std::cout << order[i] << (i + 1 < order.size() ? " " : "");
 			std::cout << std::endl;
 		}
 
-		void insertStep(size_t idx, int value, size_t pos)
+		void insertingOdd(const std::vector<int>& odd) const
 		{
-			if (!debug)
-				return;
-			std::cout << "Insert element from pend[" << idx << "] value=" << value
-					<< " at main index=" << pos << std::endl;
+			if (!debug) return;
+			printSequence(odd, "Inserting remaining odd elements");
 		}
 
-		void insertStepStray(int value, size_t pos)
+		void finalAfter(const std::vector<int>& seq) const
 		{
-			if (!debug)
-				return;
-			std::cout << "Insert stray element value=" << value
-					<< " at main index=" << pos << std::endl;
+			if (!debug) return;
+			std::cout << "After: ";
+			printSequence(seq);
 		}
-
 };
+

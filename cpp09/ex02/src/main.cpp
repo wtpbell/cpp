@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+#include "PmergeMe.tpp"
 #include "MergeInsertionTracer.hpp"
 #include <iostream>
 #include <string>
@@ -20,32 +21,24 @@
 
 int	main(int argc, char** argv)
 {
-	std::vector<int>	vect;
-	PmergeMe			mergeMe;
-	MergeInsertionTracer tracer(true);
+	PmergeMe			sorter;
+	MergeInsertionTracer tracer(DEBUG);
 	size_t				pairLevel = 1;
 
 	if (argc < 2)
 	{
-		std::cerr << "Error [usage]: " << argv[0] << " <unsorted / sorted container>" << std::endl;
+		std::cerr << "Error [usage]: " << argv[0] << " <positive integer sequence>" << std::endl;
 		return (1);
 	}
 	try
 	{
-		vect = mergeMe.handleVector(argc, argv);
-		if (is_sorted(vect.begin(), vect.end()))
-			throw std::runtime_error("The input is already sorted.");
-	}
-	catch (std::runtime_error const& e)
-	{
-		std::cerr << e.what() << std::endl;
-		return (1);
+		auto vect = sorter.assignContainer<PmergeMe::Vector>(argc - 1, argv + 1);
+		auto list = sorter.assignContainer<PmergeMe::List>(argc - 1, argv + 1);
+		logTime(sorter, vect, list, pairLevel, tracer);
 	}
 	catch (...)
 	{
 		return (1);
 	}
-	
-	mergeMe.mergeInsertionSort(vect, pairLevel, tracer);
 	return (0);
 }
