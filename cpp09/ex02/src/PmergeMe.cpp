@@ -6,7 +6,7 @@
 /*   By: bewong <bewong@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 11:49:52 by bewong            #+#    #+#             */
-/*   Updated: 2025/10/09 21:37:29 by bewong           ###   ########.fr       */
+/*   Updated: 2025/10/09 21:44:17 by bewong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,12 @@ void	PmergeMe::flattenPairs(Vector& c, VectorOfPairs& pairs)
 
 	for (auto& pair : pairs)
 	{
-		c.insert(c.end(), pair.first.begin(), pair.first.end());
-		c.insert(c.end(), pair.second.begin(), pair.second.end());
+		c.insert(c.end(),
+				 std::make_move_iterator(pair.first.begin()),
+				 std::make_move_iterator(pair.first.end()));
+		c.insert(c.end(),
+				 std::make_move_iterator(pair.second.begin()),
+				 std::make_move_iterator(pair.second.end()));
 	}
 }
 
@@ -235,7 +239,8 @@ void	PmergeMe::flattenMain(Vector& c, const VectorOfVectors& main)
 	c.reserve(total_size);
 
 	for (const auto& seq : main)
-		c.insert(c.end(), seq.begin(), seq.end());
+		c.insert(c.end(),std::make_move_iterator(seq.begin()),
+			std::make_move_iterator(seq.end()));
 }
 
 void PmergeMe::flattenMain(List& c, const ListOfLists& main)
